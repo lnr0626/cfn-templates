@@ -17,9 +17,10 @@ private object Jackson {
     }
 }
 
-@JsonPropertyOrder("AWSTemplateFormatVersion", "Description", "Parameters", "Mappings", "Conditions", "Resources", "Outputs")
+@JsonPropertyOrder("AWSTemplateFormatVersion", "Description", "Metadata", "Parameters", "Mappings", "Conditions", "Resources", "Outputs")
 class Template(
         var description: String = "",
+        val metadata: MutableMap<String, Any> = mutableMapOf(),
         val parameters: MutableMap<String, Any> = mutableMapOf(),
         val mappings: MutableMap<String, Any> = mutableMapOf(),
         val conditions: MutableMap<String, Any> = mutableMapOf(),
