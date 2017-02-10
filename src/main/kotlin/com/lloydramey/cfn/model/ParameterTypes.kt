@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 
 @JsonSerialize(using = ParameterTypeSerializer::class)
-sealed class ParameterType(val type: String) {
-    class Single(type: String) : ParameterType(type)
-    class List(contents: Single) : ParameterType("List<${contents.type}>")
+sealed class ParameterType(internal val serialization: String) {
+    data class Single(val type: String) : ParameterType(type)
+    data class List(val contents: Single) : ParameterType("List<${contents.type}>")
 }
 
 object AWS {
@@ -42,7 +42,7 @@ object Types {
 
 class ParameterTypeSerializer : StdSerializer<ParameterType>(ParameterType::class.java) {
     override fun serialize(value: ParameterType?, gen: JsonGenerator?, provider: SerializerProvider?) {
-        gen?.writeString(value?.type)
+        gen?.writeString(value?.serialization)
     }
 
 }
