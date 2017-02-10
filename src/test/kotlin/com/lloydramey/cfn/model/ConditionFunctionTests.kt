@@ -12,6 +12,12 @@ class ConditionFunctionTests {
     }
 
     @Test
+    fun conditionFormatting() {
+        assertThat(Jackson.mapper.writeValueAsString(And(Equals("left", "right"), !ConditionReference("Blah"), ConditionReference("Another"))),
+                jsonEquals("{'Fn::And': [{'Fn::Equals': ['left', 'right']}, {'Fn::Not': {'Condition': 'Blah'}}, {'Condition': 'Another'}]}"))
+    }
+
+    @Test
     fun notJsonIsValid() {
         assertThat(Jackson.mapper.writeValueAsString(!ConditionReference("Test")), jsonEquals("{'Fn::Not': {'Condition':'Test'}}"))
     }
