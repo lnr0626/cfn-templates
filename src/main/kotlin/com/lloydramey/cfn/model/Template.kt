@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
-private object Jackson {
+internal object Jackson {
     val mapper = jacksonObjectMapper()
 
     init {
