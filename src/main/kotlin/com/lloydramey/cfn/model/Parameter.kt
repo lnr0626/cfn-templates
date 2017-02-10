@@ -3,7 +3,7 @@ package com.lloydramey.cfn.model
 
 data class Parameter(
         val allowedPattern: String = "",
-        val allowedValues: String = "",
+        val allowedValues: List<String> = listOf(),
         val constraintDescription: String = "",
         val default: String = "",
         val description: String = "",
