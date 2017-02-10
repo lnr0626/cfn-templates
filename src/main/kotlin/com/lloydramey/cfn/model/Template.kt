@@ -22,7 +22,7 @@ data class Template(
         var description: String = "",
         val metadata: MutableMap<String, Any> = mutableMapOf(),
         val parameters: MutableMap<String, Parameter> = mutableMapOf(),
-        val mappings: MutableMap<String, Any> = mutableMapOf(),
+        val mappings: MutableMap<String, Mapping> = mutableMapOf(),
         val conditions: MutableMap<String, Any> = mutableMapOf(),
         val resources: MutableMap<String, Any> = mutableMapOf(),
         val outputs: MutableMap<String, Any> = mutableMapOf()
