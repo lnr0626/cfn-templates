@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 @JsonSerialize(using = ParameterTypeSerializer::class)
 sealed class ParameterType(val type: String) {
     class Single(type: String) : ParameterType(type)
-    class List(contents: Single): ParameterType("List<${contents.type}>")
+    class List(contents: Single) : ParameterType("List<${contents.type}>")
 }
 
 object AWS {
@@ -17,10 +17,12 @@ object AWS {
         val Image = ParameterType.Single("AWS::EC2::Image::Id")
         val Instance = ParameterType.Single("AWS::EC2::Instance::Id")
         val KeyPair = ParameterType.Single("AWS::EC2::KeyPair::KeyName")
+
         object SecurityGroup {
             val Name = ParameterType.Single("AWS::EC2::SecurityGroup::GroupName")
             val Id = ParameterType.Single("AWS::EC2::SecurityGroup::Id")
         }
+
         val Subnet = ParameterType.Single("AWS::EC2::Subnet::Id")
         val Volume = ParameterType.Single("AWS::EC2::Volume::Id")
         val VPC = ParameterType.Single("AWS::EC2::VPC::Id")
