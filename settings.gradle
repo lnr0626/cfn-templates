@@ -1,2 +1,3 @@
 rootProject.name = 'cfn'
 
+include ':base-models'
