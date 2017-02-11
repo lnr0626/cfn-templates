@@ -84,7 +84,7 @@ val EnvType = parameter("EnvType", Types.String) {
     allowedValues = listOf("prod", "test")
     constraintDescription = "must specify prod or test."
 }
-val CreateProdResource = condition("CreateProdResources", Equals(EnvType.ref(), "prod"))
+val CreateProdResource = condition("CreateProdResources", Equals(Ref(EnvType), Val("prod")))
 val RegionMap = mapping("RegionMap") {
     key("us-east-1", "AMI" to "ami-7f418316", "TestAZ" to "us-east-1a")
     key("us-west-1", "AMI" to "ami-951945d0", "TestAz" to "us-west-1a")
@@ -95,22 +95,21 @@ val RegionMap = mapping("RegionMap") {
     key("ap-southeast-2", "AMI" to "ami-b3990e89", "TestAz" to "ap-southeast-2a")
     key("ap-northeast-1", "AMI" to "ami-dcfa4edd", "TestAz" to "ap-northeast-1a")
 }
-val instance: Instance = resource("EC2Instance") {
+val instance = resource<Instance>("EC2Instance") {
     imageId = FindInMap(RegionMap, AWS.Region, "AMI")
 }
-val volume: Volume = resource("NewVolume", condition = CreateProdResource) {
-    size = 100
+val volume = resource<Volume>("NewVolume", ConditionAttribute(CreateProdResource)) {
+    size = Val(100)
     availabilityZone = instance.attrs.AvailabilityZone
 }
-val attachment: VolumeAttachment = resource("MountPoint", condition = CreateProdResource) {
-    instanceId = instance.ref()
-    volumeId = volume.ref()
-    device = "/dev/sdh"
+val attachment = resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionAttribute(CreateProdResource)) {
+    instanceId = Ref(instance)
+    volumeId = Ref(volume)
+    device = Val("/dev/sdh")
 }
 
-val volumeId = output("VolumeId") {
-    value = volume.ref()
-    condition = CreateProdResource
+val volumeId = output("VolumeId", ConditionAttribute(CreateProdResource)) {
+    value = Ref(volume)
 }
 
 val template = Template(

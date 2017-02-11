@@ -23,3 +23,6 @@ inline fun <reified T : ResourceProperties> resource(id: String, vararg attribut
     properties.init()
     return Resource(id = id, attributes = attributes.asList(), properties = properties)
 }
+
+abstract class ResourceAttribute(val name: String)
+abstract class ResourceProperties(@JsonIgnore val type: String)

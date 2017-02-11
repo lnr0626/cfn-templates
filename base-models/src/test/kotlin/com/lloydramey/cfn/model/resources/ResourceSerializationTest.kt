@@ -26,14 +26,13 @@ class ResourceSerializationTest {
     @Test
     fun metadata() {
         assertThat(
-                Jackson.mapper.writeValueAsString(MetadataAttribute(mapOf("test" to "34", "key" to "value"))),
+                Jackson.mapper.writeValueAsString(MetadataAttr(mapOf("test" to "34", "key" to "value"))),
                 jsonEquals("{'test': '34', 'key': 'value'}") // Metadata attributes maintain case?
         )
     }
 
     @Test
     fun resource() {
-
         val res = resource<TestResource>("Id", DeletionPolicy.Retain) {
             attribute = "value"
         }
