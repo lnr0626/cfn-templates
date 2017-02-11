@@ -2,10 +2,12 @@ package com.lloydramey.cfn.model.resources
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
+@JsonIgnoreProperties("Id", "Attributes")
 data class Resource<out T : ResourceProperties>(
-        @JsonIgnore val id: String,
-        @JsonIgnore val attributes: List<ResourceAttribute> = emptyList(),
+        val id: String,
+        val attributes: List<ResourceAttribute> = emptyList(),
         val properties: T
 ) {
     @Suppress("unused")
@@ -20,12 +22,4 @@ inline fun <reified T : ResourceProperties> resource(id: String, vararg attribut
     val properties = T::class.java.newInstance()
     properties.init()
     return Resource(id = id, attributes = attributes.asList(), properties = properties)
-}
-
-class Blah(var blah: String = "") : ResourceProperties("Test")
-
-object Test {
-    val t = resource<Blah>("Test") {
-        blah = "asdf"
-    }
 }
