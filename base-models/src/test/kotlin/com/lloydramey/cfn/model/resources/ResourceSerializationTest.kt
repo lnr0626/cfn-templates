@@ -5,6 +5,8 @@ import net.javacrumbs.jsonunit.JsonMatchers.jsonEquals
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
+class TestResource(var attribute: String? = null) : ResourceProperties("Test")
+
 class ResourceSerializationTest {
     @Test
     fun deletionPolicies() {
@@ -20,7 +22,14 @@ class ResourceSerializationTest {
                 jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': 2}, 'ResourceSignal':{'Count': 33, 'Timeout': 'PT15M'}}")
         )
     }
-    class TestResource(var attribute: String? = null) : ResourceProperties("Test")
+
+    @Test
+    fun metadata() {
+        assertThat(
+                Jackson.mapper.writeValueAsString(MetadataAttribute(mapOf("test" to "34", "key" to "value"))),
+                jsonEquals("{'test': '34', 'key': 'value'}") // Metadata attributes maintain case?
+        )
+    }
 
     @Test
     fun resource() {

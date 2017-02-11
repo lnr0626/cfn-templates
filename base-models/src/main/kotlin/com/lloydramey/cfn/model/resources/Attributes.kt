@@ -1,5 +1,8 @@
 package com.lloydramey.cfn.model.resources
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -55,4 +58,40 @@ fun Int.seconds() = ISO8601Duration(seconds = this)
 
 data class AutoScalingCreationPolicy(val minSuccessfulInstancesPercent: Int?)
 data class ResourceSignal(val count: Int?, val timeout: ISO8601Duration?)
-data class CreationPolicy(val autoScalingCreationPolicy: AutoScalingCreationPolicy?, val resourceSignal: ResourceSignal?)
+data class CreationPolicy(val autoScalingCreationPolicy: AutoScalingCreationPolicy?, val resourceSignal: ResourceSignal?) : ResourceAttribute("CreationPolicy")
+
+@JsonSerialize(using = DependsOnSerializer::class)
+data class DependsOn(val res: Resource<ResourceProperties>, val resources: List<Resource<ResourceProperties>>) : ResourceAttribute("DependsOn") {
+    constructor(res: Resource<ResourceProperties>, vararg resources: Resource<ResourceProperties>) : this(res, resources.asList())
+}
+
+class DependsOnSerializer : StdSerializer<DependsOn>(DependsOn::class.java) {
+    override fun serialize(value: DependsOn?, gen: JsonGenerator?, provider: SerializerProvider?) {
+        val dependsOn = value ?: return
+
+        if(dependsOn.resources.isEmpty()) {
+            gen?.writeString(dependsOn.res.id)
+        } else {
+            gen?.writeStartArray()
+            gen?.writeString(dependsOn.res.id)
+            dependsOn.resources.forEach {
+                gen?.writeString(it.id)
+            }
+            gen?.writeEndArray()
+        }
+    }
+}
+
+@JsonSerialize(using = MetadataAttributeSerializer::class)
+class MetadataAttribute(@JsonIgnore val properties: Map<String, Any>) : ResourceAttribute("Metadata")
+
+class MetadataAttributeSerializer : StdSerializer<MetadataAttribute>(MetadataAttribute::class.java) {
+    override fun serialize(value: MetadataAttribute?, gen: JsonGenerator?, provider: SerializerProvider?) {
+        gen?.writeStartObject()
+        value?.properties?.forEach { (key, value) ->
+            gen?.writeObjectField(key, value)
+        }
+        gen?.writeEndObject()
+    }
+
+}
