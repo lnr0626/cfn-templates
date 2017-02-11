@@ -30,6 +30,7 @@ class ConditionAttributeSerializer : StdSerializer<ConditionAttribute>(Condition
     }
 }
 
+@JsonSerialize(using = ISO8601DurationSerializer::class)
 data class ISO8601Duration(val hours: Int = 0, val minutes: Int = 0, val seconds: Int = 0) {
     operator fun plus(other: ISO8601Duration) = ISO8601Duration(this.hours + other.hours, this.minutes + other.minutes, this.seconds + other.seconds)
 

@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class Resource<out T : ResourceProperties>(
         @JsonIgnore val id: String,
-        val properties: T,
-        @JsonIgnore val attributes: List<ResourceAttribute> = emptyList()
+        @JsonIgnore val attributes: List<ResourceAttribute> = emptyList(),
+        val properties: T
 ) {
+    @Suppress("unused")
     val type = properties.type
+
     @Suppress("unused")
     @JsonAnyGetter
     fun json() = attributes.associateBy { it.name }
