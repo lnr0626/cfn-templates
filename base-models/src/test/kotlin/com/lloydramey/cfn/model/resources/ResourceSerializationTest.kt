@@ -20,4 +20,18 @@ class ResourceSerializationTest {
                 jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': 2}, 'ResourceSignal':{'Count': 33, 'Timeout': 'PT15M'}}")
         )
     }
+    class TestResource(var attribute: String? = null) : ResourceProperties("Test")
+
+    @Test
+    fun resource() {
+
+        val res = resource<TestResource>("Id", DeletionPolicy.Retain) {
+            attribute = "value"
+        }
+
+        assertThat(
+                Jackson.mapper.writeValueAsString(res),
+                jsonEquals("{'Properties': {'Attribute': 'value'}, 'Type': 'Test', 'DeletionPolicy': 'Retain'}")
+        )
+    }
 }
