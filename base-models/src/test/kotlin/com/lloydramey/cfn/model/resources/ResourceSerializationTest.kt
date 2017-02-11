@@ -5,7 +5,9 @@ import net.javacrumbs.jsonunit.JsonMatchers.jsonEquals
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
-class TestResource(var attribute: String? = null) : ResourceProperties("Test")
+class TestResource : ResourceProperties("Test") {
+    lateinit var attribute: String
+}
 
 class ResourceSerializationTest {
     @Test
