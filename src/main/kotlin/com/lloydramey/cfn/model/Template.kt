@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.lloydramey.cfn.model.resources.Resource
+import com.lloydramey.cfn.model.resources.ResourceProperties
 
 internal object Jackson {
     val mapper = jacksonObjectMapper()
@@ -24,7 +26,7 @@ data class Template(
         val parameters: MutableMap<String, Parameter> = mutableMapOf(),
         val mappings: MutableMap<String, Mapping> = mutableMapOf(),
         val conditions: MutableMap<String, ConditionFunction> = mutableMapOf(),
-        val resources: MutableMap<String, Any> = mutableMapOf(),
+        val resources: MutableMap<String, Resource<ResourceProperties>> = mutableMapOf(),
         val outputs: MutableMap<String, Any> = mutableMapOf()
 ) {
     @JsonProperty("AWSTemplateFormatVersion")

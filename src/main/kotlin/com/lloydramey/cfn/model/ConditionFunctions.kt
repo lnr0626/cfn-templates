@@ -1,5 +1,7 @@
 package com.lloydramey.cfn.model
 
+data class Condition(val id: String, val condition: ConditionFunction)
+
 interface ConditionFunction {
     operator fun not(): ConditionFunction = Not(this)
 }
