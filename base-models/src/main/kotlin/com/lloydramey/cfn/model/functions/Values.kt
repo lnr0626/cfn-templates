@@ -18,9 +18,7 @@ class Val(val value: String) : AwsTemplateValue, AllowedInConditionFunction, All
     constructor(value: Boolean) : this(value.toString())
     constructor(value: Number) : this(value.toString())
 
-    override fun toString(): String {
-        return value
-    }
+    override fun toString(): String = value
 }
 
 abstract class Fn(@JsonIgnore val name: String, @JsonIgnore val value: Any) {
