@@ -1,7 +1,8 @@
 package com.lloydramey.cfn.model
 
+import com.lloydramey.cfn.model.functions.Referencable
 
-data class Parameter(
+class Parameter(
         val allowedPattern: String = "",
         val allowedValues: List<String> = listOf(),
         val constraintDescription: String = "",
@@ -13,8 +14,8 @@ data class Parameter(
         val minValue: Number? = null,
         val noEcho: String = "",
         val type: ParameterType,
-        val id: String
-) {
+        id: String
+) : Referencable(id) {
     init {
         if (isNumberParameter() && areStringOnlyFieldsPopulated()) {
             throw IllegalArgumentException("You cannot specify MinLength, MaxLength, or AllowedPattern for a Number Parameter ($id)")

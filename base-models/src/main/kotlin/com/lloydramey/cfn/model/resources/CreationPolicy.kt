@@ -31,4 +31,4 @@ data class ResourceSignal(
 
 data class CreationPolicy(
         val autoScalingCreationPolicy: AutoScalingCreationPolicy?,
-        val resourceSignal: ResourceSignal?) : ResourceAttribute("CreationPolicy")
+        val resourceSignal: ResourceSignal?) : ResourceDefinitionAttribute("CreationPolicy")

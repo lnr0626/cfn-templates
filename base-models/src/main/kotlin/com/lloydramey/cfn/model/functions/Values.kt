@@ -10,8 +10,7 @@ import com.lloydramey.cfn.model.resources.ResourceProperties
 
 interface IntrinsicFunction
 interface AwsTemplateValue
-
-abstract class Referencable(val id: String) : AwsTemplateValue
+abstract class Referencable(@JsonIgnore val id: String)
 
 @JsonSerialize(using = ToStringSerializer::class)
 class Val(val value: String) : AwsTemplateValue, AllowedInConditionFunction, AllowedInIfValues {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 
 @JsonSerialize(using = ToStringSerializer::class)
-sealed class DeletionPolicy(val value: String) : ResourceAttribute("DeletionPolicy") {
+sealed class DeletionPolicy(val value: String) : ResourceDefinitionAttribute("DeletionPolicy") {
     object Retain : DeletionPolicy("Retain")
     object Delete : DeletionPolicy("Delete")
     object Snapshot : DeletionPolicy("Snapshot")

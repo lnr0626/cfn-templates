@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.lloydramey.cfn.model.functions.Condition
 
 @JsonSerialize(using = ConditionAttributeSerializer::class)
-data class ConditionAttr(val condition: Condition) : ResourceAttribute("Condition")
+data class ConditionAttr(val condition: Condition) : ResourceDefinitionAttribute("Condition")
 
 class ConditionAttributeSerializer : StdSerializer<ConditionAttr>(ConditionAttr::class.java) {
     override fun serialize(value: ConditionAttr?, gen: JsonGenerator?, provider: SerializerProvider?) {

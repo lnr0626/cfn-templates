@@ -33,4 +33,4 @@ class UpdatePolicy(
         val autoScalingReplacingUpdate: AutoScalingReplacingUpdate? = null,
         val autoScalingRollingUpdate: AutoScalingRollingUpdate? = null,
         val autoScalingScheduledAction: AutoScalingScheduledAction? = null
-) : ResourceAttribute("UpdatePolicy")
+) : ResourceDefinitionAttribute("UpdatePolicy")

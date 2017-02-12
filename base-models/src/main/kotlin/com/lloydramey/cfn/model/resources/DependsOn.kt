@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 
 @JsonSerialize(using = DependsOnSerializer::class)
-data class DependsOn(val res: Resource<ResourceProperties>, val resources: List<Resource<ResourceProperties>>) : ResourceAttribute("DependsOn") {
+data class DependsOn(val res: Resource<ResourceProperties>, val resources: List<Resource<ResourceProperties>>) : ResourceDefinitionAttribute("DependsOn") {
     constructor(res: Resource<ResourceProperties>, vararg resources: Resource<ResourceProperties>) : this(res, resources.asList())
 }
 

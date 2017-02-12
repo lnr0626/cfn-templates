@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.lloydramey.cfn.model.functions.Condition
 
 @JsonSerialize(using = MetadataAttributeSerializer::class)
-class MetadataAttr(@JsonIgnore val properties: Map<String, Any>) : ResourceAttribute("Metadata")
+class MetadataAttr(@JsonIgnore val properties: Map<String, Any>) : ResourceDefinitionAttribute("Metadata")
 
 class MetadataAttributeSerializer : StdSerializer<MetadataAttr>(MetadataAttr::class.java) {
     override fun serialize(value: MetadataAttr?, gen: JsonGenerator?, provider: SerializerProvider?) {
