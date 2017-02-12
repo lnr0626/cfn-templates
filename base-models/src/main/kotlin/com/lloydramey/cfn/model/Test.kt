@@ -1,5 +1,7 @@
 package com.lloydramey.cfn.model
 
+import com.lloydramey.cfn.model.functions.ConditionFunction
+
 abstract class ResourceTest(val id: String, val condition: ConditionFunction?) {
     abstract fun properties(): Map<String, Any>
 }
