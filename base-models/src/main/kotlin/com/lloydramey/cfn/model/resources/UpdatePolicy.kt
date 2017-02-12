@@ -26,7 +26,7 @@ data class AutoScalingRollingUpdate(
 )
 
 data class AutoScalingScheduledAction(
-        val ignoreUnmodifiedGroupSizeProperties: Boolean? = null
+        @JsonSerialize(using = ToStringSerializer::class) val ignoreUnmodifiedGroupSizeProperties: Boolean? = null
 )
 
 class UpdatePolicy(
