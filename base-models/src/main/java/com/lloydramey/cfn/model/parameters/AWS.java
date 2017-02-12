@@ -1,4 +1,6 @@
-package com.lloydramey.cfn.model;
+package com.lloydramey.cfn.model.parameters;
+
+import com.lloydramey.cfn.model.ParameterType;
 
 public class AWS {
     public static class EC2 {
