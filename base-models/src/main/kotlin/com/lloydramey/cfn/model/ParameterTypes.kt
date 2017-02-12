@@ -11,28 +11,6 @@ sealed class ParameterType(internal val serialization: String) {
     data class List(val contents: Single) : ParameterType("List<${contents.type}>")
 }
 
-object AWS {
-    object EC2 {
-        val AvailabilityZone = ParameterType.Single("AWS::EC2::AvailabilityZone::Name")
-        val Image = ParameterType.Single("AWS::EC2::Image::Id")
-        val Instance = ParameterType.Single("AWS::EC2::Instance::Id")
-        val KeyPair = ParameterType.Single("AWS::EC2::KeyPair::KeyName")
-
-        object SecurityGroup {
-            val Name = ParameterType.Single("AWS::EC2::SecurityGroup::GroupName")
-            val Id = ParameterType.Single("AWS::EC2::SecurityGroup::Id")
-        }
-
-        val Subnet = ParameterType.Single("AWS::EC2::Subnet::Id")
-        val Volume = ParameterType.Single("AWS::EC2::Volume::Id")
-        val VPC = ParameterType.Single("AWS::EC2::VPC::Id")
-    }
-
-    object Route53 {
-        val HostedZone = ParameterType.Single("AWS::Route53::HostedZone::Id")
-    }
-}
-
 object Types {
     val Str = ParameterType.Single("String")
     val Number = ParameterType.Single("Number")
