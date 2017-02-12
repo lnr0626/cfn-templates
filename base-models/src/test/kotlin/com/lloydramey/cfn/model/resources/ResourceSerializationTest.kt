@@ -10,6 +10,13 @@ class TestResource : ResourceProperties("Test") {
 }
 
 class ResourceSerializationTest {
+    val props = TestResource()
+    val res = Resource("Id", listOf(DeletionPolicy.Retain), props)
+
+    init {
+        props.attribute = "value"
+    }
+
     @Test
     fun deletionPolicies() {
         assertThat(Jackson.mapper.writeValueAsString(DeletionPolicy.Delete), jsonEquals("Delete"))
@@ -34,6 +41,19 @@ class ResourceSerializationTest {
     }
 
     @Test
+    fun dependsOn() {
+        assertThat(
+                Jackson.mapper.writeValueAsString(DependsOn(res)),
+                jsonEquals("Id")
+        )
+
+        assertThat(
+                Jackson.mapper.writeValueAsString(DependsOn(res, res)),
+                jsonEquals("['Id', 'Id']")
+        )
+    }
+
+    @Test
     fun updatePolicy() {
         assertThat(
                 Jackson.mapper.writeValueAsString(UpdatePolicy(AutoScalingReplacingUpdate(true))),
@@ -51,11 +71,6 @@ class ResourceSerializationTest {
 
     @Test
     fun resource() {
-        val props = TestResource()
-        props.attribute = "value"
-
-        val res = Resource("Id", listOf(DeletionPolicy.Retain), props)
-
         assertThat(
                 Jackson.mapper.writeValueAsString(res),
                 jsonEquals("{'Properties': {'Attribute': 'value'}, 'Type': 'Test', 'DeletionPolicy': 'Retain'}")
