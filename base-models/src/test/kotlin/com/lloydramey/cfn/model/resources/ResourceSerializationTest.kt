@@ -1,6 +1,6 @@
 package com.lloydramey.cfn.model.resources
 
-import com.lloydramey.cfn.model.Jackson
+import com.lloydramey.cfn.model.TestHelper
 import net.javacrumbs.jsonunit.JsonMatchers.jsonEquals
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -19,15 +19,15 @@ class ResourceSerializationTest {
 
     @Test
     fun deletionPolicies() {
-        assertThat(Jackson.mapper.writeValueAsString(DeletionPolicy.Delete), jsonEquals("Delete"))
-        assertThat(Jackson.mapper.writeValueAsString(DeletionPolicy.Snapshot), jsonEquals("Snapshot"))
-        assertThat(Jackson.mapper.writeValueAsString(DeletionPolicy.Retain), jsonEquals("Retain"))
+        assertThat(TestHelper.mapper.writeValueAsString(DeletionPolicy.Delete), jsonEquals("Delete"))
+        assertThat(TestHelper.mapper.writeValueAsString(DeletionPolicy.Snapshot), jsonEquals("Snapshot"))
+        assertThat(TestHelper.mapper.writeValueAsString(DeletionPolicy.Retain), jsonEquals("Retain"))
     }
 
     @Test
     fun creationPolicies() {
         assertThat(
-                Jackson.mapper.writeValueAsString(CreationPolicy(AutoScalingCreationPolicy(2), ResourceSignal(33, 15.minutes()))),
+                TestHelper.mapper.writeValueAsString(CreationPolicy(AutoScalingCreationPolicy(2), ResourceSignal(33, 15.minutes()))),
                 jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': '2'}, 'ResourceSignal':{'Count': '33', 'Timeout': 'PT15M'}}")
         )
     }
@@ -35,7 +35,7 @@ class ResourceSerializationTest {
     @Test
     fun metadata() {
         assertThat(
-                Jackson.mapper.writeValueAsString(MetadataAttr(mapOf("test" to "34", "key" to "value"))),
+                TestHelper.mapper.writeValueAsString(MetadataAttr(mapOf("test" to "34", "key" to "value"))),
                 jsonEquals("{'test': '34', 'key': 'value'}") // Metadata attributes maintain case?
         )
     }
@@ -43,12 +43,12 @@ class ResourceSerializationTest {
     @Test
     fun dependsOn() {
         assertThat(
-                Jackson.mapper.writeValueAsString(DependsOn(res)),
+                TestHelper.mapper.writeValueAsString(DependsOn(res)),
                 jsonEquals("Id")
         )
 
         assertThat(
-                Jackson.mapper.writeValueAsString(DependsOn(res, res)),
+                TestHelper.mapper.writeValueAsString(DependsOn(res, res)),
                 jsonEquals("['Id', 'Id']")
         )
     }
@@ -56,15 +56,15 @@ class ResourceSerializationTest {
     @Test
     fun updatePolicy() {
         assertThat(
-                Jackson.mapper.writeValueAsString(UpdatePolicy(AutoScalingReplacingUpdate(true))),
+                TestHelper.mapper.writeValueAsString(UpdatePolicy(AutoScalingReplacingUpdate(true))),
                 jsonEquals("{'AutoScalingReplacingUpdate': {'WillReplace': 'true'}}")
         )
         assertThat(
-                Jackson.mapper.writeValueAsString(UpdatePolicy(autoScalingRollingUpdate = AutoScalingRollingUpdate(1, 0))),
+                TestHelper.mapper.writeValueAsString(UpdatePolicy(autoScalingRollingUpdate = AutoScalingRollingUpdate(1, 0))),
                 jsonEquals("{'AutoScalingRollingUpdate': {'MaxBatchSize': '1', 'MinInstancesInService': '0'}}")
         )
         assertThat(
-                Jackson.mapper.writeValueAsString(UpdatePolicy(autoScalingScheduledAction = AutoScalingScheduledAction(true))),
+                TestHelper.mapper.writeValueAsString(UpdatePolicy(autoScalingScheduledAction = AutoScalingScheduledAction(true))),
                 jsonEquals("{'AutoScalingScheduledAction': {'IgnoreUnmodifiedGroupSizeProperties': 'true'}}")
         )
     }
@@ -72,7 +72,7 @@ class ResourceSerializationTest {
     @Test
     fun resource() {
         assertThat(
-                Jackson.mapper.writeValueAsString(res),
+                TestHelper.mapper.writeValueAsString(res),
                 jsonEquals("{'Properties': {'Attribute': 'value'}, 'Type': 'Test', 'DeletionPolicy': 'Retain'}")
         )
     }
