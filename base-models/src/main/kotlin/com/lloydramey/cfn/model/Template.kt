@@ -28,7 +28,7 @@ data class Template(
         val mappings: MutableMap<String, Mapping> = mutableMapOf(),
         val conditions: MutableMap<String, ConditionFunction> = mutableMapOf(),
         val resources: MutableMap<String, Resource<ResourceProperties>> = mutableMapOf(),
-        val outputs: MutableMap<String, Any> = mutableMapOf()
+        val outputs: MutableMap<String, Output> = mutableMapOf()
 ) {
     @JsonProperty("AWSTemplateFormatVersion")
     val version = "2010-09-09"
