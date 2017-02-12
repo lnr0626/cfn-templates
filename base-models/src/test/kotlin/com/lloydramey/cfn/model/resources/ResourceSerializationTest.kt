@@ -21,7 +21,7 @@ class ResourceSerializationTest {
     fun creationPolicies() {
         assertThat(
                 Jackson.mapper.writeValueAsString(CreationPolicy(AutoScalingCreationPolicy(2), ResourceSignal(33, 15.minutes()))),
-                jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': 2}, 'ResourceSignal':{'Count': 33, 'Timeout': 'PT15M'}}")
+                jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': '2'}, 'ResourceSignal':{'Count': '33', 'Timeout': 'PT15M'}}")
         )
     }
 
@@ -30,6 +30,22 @@ class ResourceSerializationTest {
         assertThat(
                 Jackson.mapper.writeValueAsString(MetadataAttr(mapOf("test" to "34", "key" to "value"))),
                 jsonEquals("{'test': '34', 'key': 'value'}") // Metadata attributes maintain case?
+        )
+    }
+
+    @Test
+    fun updatePolicy() {
+        assertThat(
+                Jackson.mapper.writeValueAsString(UpdatePolicy(AutoScalingReplacingUpdate(true))),
+                jsonEquals("{'AutoScalingReplacingUpdate': {'WillReplace': 'true'}}")
+        )
+        assertThat(
+                Jackson.mapper.writeValueAsString(UpdatePolicy(autoScalingRollingUpdate = AutoScalingRollingUpdate(1, 0))),
+                jsonEquals("{'AutoScalingRollingUpdate': {'MaxBatchSize': '1', 'MinInstancesInService': '0'}}")
+        )
+        assertThat(
+                Jackson.mapper.writeValueAsString(UpdatePolicy(autoScalingScheduledAction = AutoScalingScheduledAction(true))),
+                jsonEquals("{'AutoScalingScheduledAction': {'IgnoreUnmodifiedGroupSizeProperties': 'true'}}")
         )
     }
 

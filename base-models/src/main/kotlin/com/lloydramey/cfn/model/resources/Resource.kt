@@ -24,5 +24,5 @@ inline fun <reified T : ResourceProperties> resource(id: String, vararg attribut
     return Resource(id = id, attributes = attributes.asList(), properties = properties)
 }
 
-abstract class ResourceAttribute(val name: String)
+abstract class ResourceAttribute(@JsonIgnore val name: String)
 abstract class ResourceProperties(@JsonIgnore val type: String)
