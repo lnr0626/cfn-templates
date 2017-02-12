@@ -100,7 +100,7 @@ val instance = resource<Instance>("EC2Instance") {
 }
 val volume = resource<Volume>("NewVolume", ConditionAttribute(CreateProdResource)) {
     size = Val(100)
-    availabilityZone = instance.attrs.AvailabilityZone
+    availabilityZone = instance["AvailabilityZone"]
 }
 val attachment = resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionAttribute(CreateProdResource)) {
     instanceId = Ref(instance)
