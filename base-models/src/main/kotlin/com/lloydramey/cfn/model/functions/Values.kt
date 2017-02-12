@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.lloydramey.cfn.model.Mapping
-import com.lloydramey.cfn.model.resources.Resource
-import com.lloydramey.cfn.model.resources.ResourceProperties
 
 interface IntrinsicFunction
 interface AwsTemplateValue
 abstract class Referencable(@JsonIgnore val id: String)
+abstract class ReferencableWithAttributes(id: String) : Referencable(id) {
+    operator fun get(attrId: String) = GetAtt(this, attrId)
+}
 
 @JsonSerialize(using = ToStringSerializer::class)
 class Val(val value: String) : AwsTemplateValue, AllowedInConditionFunction, AllowedInIfValues {
@@ -30,7 +31,7 @@ abstract class Fn(@JsonIgnore val name: String, @JsonIgnore val value: Any) {
 class Ref(ref: Referencable) : Fn("Ref", ref.id), AwsTemplateValue, IntrinsicFunction, AllowedInConditionFunction, AllowedInIfValues
 class Base64(toEncode: AwsTemplateValue) : Fn("Fn::Base64", toEncode), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class FindInMap(map: Mapping, topLevel: AwsTemplateValue, secondLevel: AwsTemplateValue) : Fn("Fn::FindInMap", listOf(map.id, topLevel, secondLevel)), AwsTemplateValue, IntrinsicFunction, AllowedInConditionFunction
-class GetAtt(res: Resource<ResourceProperties>, attr: String) : Fn("Fn::GetAtt", listOf(res.id, attr)), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
+class GetAtt(res: ReferencableWithAttributes, attr: String) : Fn("Fn::GetAtt", listOf(res.id, attr)), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class GetAZs(region: String) : Fn("Fn::GetAZs", region), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class ImportValue(name: String) : Fn("Fn::ImportValue", name), AwsTemplateValue, IntrinsicFunction
 class Join(values: List<AwsTemplateValue>) : Fn("Fn::Join", values), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues {

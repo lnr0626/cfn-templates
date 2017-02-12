@@ -51,9 +51,10 @@ class ResourceSerializationTest {
 
     @Test
     fun resource() {
-        val res = resource<TestResource>("Id", DeletionPolicy.Retain) {
-            attribute = "value"
-        }
+        val props = TestResource()
+        props.attribute = "value"
+
+        val res = Resource("Id", listOf(DeletionPolicy.Retain), props)
 
         assertThat(
                 Jackson.mapper.writeValueAsString(res),

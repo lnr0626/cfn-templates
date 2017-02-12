@@ -3,9 +3,7 @@ package com.lloydramey.cfn.model.resources
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.lloydramey.cfn.model.functions.Referencable
-
-abstract class ReferencableWithAttributes(id: String) : Referencable(id)
+import com.lloydramey.cfn.model.functions.ReferencableWithAttributes
 
 abstract class ResourceDefinitionAttribute(@JsonIgnore val name: String)
 abstract class ResourceProperties(@JsonIgnore val type: String)
