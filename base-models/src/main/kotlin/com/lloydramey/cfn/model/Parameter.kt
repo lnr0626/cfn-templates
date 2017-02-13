@@ -1,7 +1,10 @@
 package com.lloydramey.cfn.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.lloydramey.cfn.model.functions.Referencable
+import com.lloydramey.cfn.model.parameters.Types
 
+@JsonIgnoreProperties("Id")
 class Parameter(
         val allowedPattern: String = "",
         val allowedValues: List<String> = listOf(),
