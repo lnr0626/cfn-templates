@@ -98,17 +98,17 @@ val RegionMap = mapping("RegionMap") {
 val instance = resource<Instance>("EC2Instance") {
     imageId = FindInMap(RegionMap, AWS.Region, "AMI")
 }
-val volume = resource<Volume>("NewVolume", ConditionAttribute(CreateProdResource)) {
+val volume = resource<Volume>("NewVolume", ConditionalOn(CreateProdResource)) {
     size = Val(100)
     availabilityZone = instance["AvailabilityZone"]
 }
-val attachment = resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionAttribute(CreateProdResource)) {
+val attachment = resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionalOn(CreateProdResource)) {
     instanceId = Ref(instance)
     volumeId = Ref(volume)
     device = Val("/dev/sdh")
 }
 
-val volumeId = output("VolumeId", ConditionAttribute(CreateProdResource)) {
+val volumeId = output("VolumeId", ConditionalOn(CreateProdResource)) {
     value = Ref(volume)
 }
 

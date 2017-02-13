@@ -21,11 +21,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.lloydramey.cfn.model.functions.Condition
 
-@JsonSerialize(using = ConditionAttributeSerializer::class)
-data class ConditionAttr(val condition: Condition) : ResourceDefinitionAttribute("Condition")
+@JsonSerialize(using = ConditionalOnSerializer::class)
+data class ConditionalOn(val condition: Condition) : ResourceDefinitionAttribute("Condition")
 
-class ConditionAttributeSerializer : StdSerializer<ConditionAttr>(ConditionAttr::class.java) {
-    override fun serialize(value: ConditionAttr?, gen: JsonGenerator?, provider: SerializerProvider?) {
+class ConditionalOnSerializer : StdSerializer<ConditionalOn>(ConditionalOn::class.java) {
+    override fun serialize(value: ConditionalOn?, gen: JsonGenerator?, provider: SerializerProvider?) {
         gen?.writeString(value?.condition?.id)
     }
 }
