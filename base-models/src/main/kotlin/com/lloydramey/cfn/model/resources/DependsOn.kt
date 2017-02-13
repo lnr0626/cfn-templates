@@ -29,7 +29,7 @@ class DependsOnSerializer : StdSerializer<DependsOn>(DependsOn::class.java) {
     override fun serialize(value: DependsOn?, gen: JsonGenerator?, provider: SerializerProvider?) {
         val dependsOn = value ?: return
 
-        if(dependsOn.resources.isEmpty()) {
+        if (dependsOn.resources.isEmpty()) {
             gen?.writeString(dependsOn.res.id)
         } else {
             gen?.writeStartArray()

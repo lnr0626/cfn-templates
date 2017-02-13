@@ -37,7 +37,7 @@ class Parameter(
     init {
         if (isNumberParameter() && areStringOnlyFieldsPopulated()) {
             throw IllegalArgumentException("You cannot specify MinLength, MaxLength, or AllowedPattern for a Number Parameter ($id)")
-        } else if(isNotNumberParameter() && areNumberOnlyFieldsPopulated()) {
+        } else if (isNotNumberParameter() && areNumberOnlyFieldsPopulated()) {
             throw IllegalArgumentException("You cannot specify MinValue or MaxValue for a Number Parameter ($id)")
         }
     }

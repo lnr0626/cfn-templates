@@ -15,14 +15,11 @@
  */
 package com.lloydramey.cfn.model.resources
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.lloydramey.cfn.model.functions.Condition
 
 @JsonSerialize(using = MetadataAttributeSerializer::class)
 class MetadataAttr(@JsonIgnore val properties: Map<String, Any>) : ResourceDefinitionAttribute("Metadata")

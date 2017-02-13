@@ -137,7 +137,6 @@ class ApiGateway {
                 val uri: String? = null
         )
 
-
         class MapKeyToResourceSerializer : StdSerializer<Map<String, Resource<ResourceProperties>>>(emptyMap<String, Resource<ResourceProperties>>().javaClass) {
             override fun serialize(value: Map<String, Resource<ResourceProperties>>?, gen: JsonGenerator?, provider: SerializerProvider?) {
                 if (value != null && gen != null) {

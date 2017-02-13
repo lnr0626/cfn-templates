@@ -47,4 +47,3 @@ inline fun <reified T : ResourceProperties> resource(id: String, vararg attribut
     return Resource(id = id, attributes = attributes.asList(), properties = properties)
 }
 
-

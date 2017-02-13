@@ -22,7 +22,6 @@ import com.lloydramey.cfn.model.parameters.Types
 import com.lloydramey.cfn.model.resources.Resource
 import com.lloydramey.cfn.model.resources.TestResource
 import net.javacrumbs.jsonunit.JsonMatchers.jsonEquals
-import net.javacrumbs.jsonunit.JsonMatchers.jsonStringEquals
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 

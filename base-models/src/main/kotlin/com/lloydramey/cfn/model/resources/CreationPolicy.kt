@@ -30,7 +30,6 @@ data class ISO8601Duration(val hours: Int = 0, val minutes: Int = 0, val seconds
     }
 }
 
-
 fun Int.hours() = ISO8601Duration(hours = this)
 fun Int.minutes() = ISO8601Duration(minutes = this)
 fun Int.seconds() = ISO8601Duration(seconds = this)

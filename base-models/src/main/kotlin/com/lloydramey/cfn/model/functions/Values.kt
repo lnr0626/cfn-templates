@@ -50,6 +50,6 @@ class ImportValue(v: AwsTemplateValue) : Fn("Fn::ImportValue", v), AwsTemplateVa
 class Join(values: List<AwsTemplateValue>) : Fn("Fn::Join", values), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues {
     constructor(vararg values: AwsTemplateValue) : this(values.asList())
 }
-class Select(index: Int, vararg values: AwsTemplateValue) : Fn("Fn::Select", listOf(index.toString(), if(values.size > 1) values.asList() else values[0])), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
+class Select(index: Int, vararg values: AwsTemplateValue) : Fn("Fn::Select", listOf(index.toString(), if (values.size > 1) values.asList() else values[0])), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class Split(delimiter: String, source: AwsTemplateValue) : Fn("Fn::Split", listOf(delimiter, source)), AwsTemplateValue, IntrinsicFunction, AllowedInConditionFunction
-class Sub(source: String, values: Map<String, AwsTemplateValue>? = null) : Fn("Fn::Sub", if(values == null) source else listOf(source, values)), AwsTemplateValue, IntrinsicFunction, AllowedInConditionFunction
+class Sub(source: String, values: Map<String, AwsTemplateValue>? = null) : Fn("Fn::Sub", if (values == null) source else listOf(source, values)), AwsTemplateValue, IntrinsicFunction, AllowedInConditionFunction
