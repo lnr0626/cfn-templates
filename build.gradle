@@ -10,12 +10,27 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.hierynomus.license" version "0.13.1"
+}
 
 subprojects {
     group 'com.lloydramey'
     version '0.0.1'
 
     apply plugin: 'kotlin'
+    apply plugin: 'com.github.hierynomus.license'
+
+    license {
+        header rootProject.file("APACHE_HEADER")
+        mapping 'kt', 'SLASHSTAR_STYLE'
+        mapping 'java', 'SLASHSTAR_STYLE'
+        strictCheck true
+
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        ext.name = 'Lloyd Ramey'
+        ext.email = 'lnr0626@gmail.com'
+    }
 
     repositories {
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
