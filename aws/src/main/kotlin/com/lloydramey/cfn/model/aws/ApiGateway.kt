@@ -1,6 +1,10 @@
 package com.lloydramey.cfn.model.aws
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.lloydramey.cfn.model.functions.AwsTemplateValue
 import com.lloydramey.cfn.model.resources.Resource
 import com.lloydramey.cfn.model.resources.ResourceProperties
@@ -30,6 +34,7 @@ class ApiGateway {
         var restApiId: AwsTemplateValue? = null
         var type: AwsTemplateValue? = null
     }
+
     class BasePathMapping : ResourceProperties("AWS::ApiGateway::BasePathMapping") {
         lateinit var domainName: AwsTemplateValue
         lateinit var restApiId: AwsTemplateValue
@@ -81,28 +86,30 @@ class ApiGateway {
     }
 
     class Method : ResourceProperties("AWS::ApiGateway::Method") {
-            var apiKeyRequired: AwsTemplateValue? = null
-            var authorizationType: AwsTemplateValue? = null
-            var authorizerId: AwsTemplateValue? = null
-            var httpMethod: AwsTemplateValue? = null
-            var integration: Integration? = null
-            var methodResponses: MutableList<MethodResponse> = mutableListOf()
-            var requestModels: MutableMap<String, Resource<Model>> = mutableMapOf()
-            var requestParameters: MutableMap<String, Boolean> = mutableMapOf()
-            var resourceId: AwsTemplateValue? = null
-            var restApiId: AwsTemplateValue? = null
+        var apiKeyRequired: AwsTemplateValue? = null
+        var authorizationType: AwsTemplateValue? = null
+        var authorizerId: AwsTemplateValue? = null
+        var httpMethod: AwsTemplateValue? = null
+        var integration: Integration? = null
+        var methodResponses: MutableList<MethodResponse> = mutableListOf()
+        @JsonSerialize(using = MapKeyToResourceSerializer::class) var requestModels: MutableMap<String, Resource<Model>> = mutableMapOf()
+        var requestParameters: MutableMap<String, Boolean> = mutableMapOf()
+        var resourceId: AwsTemplateValue? = null
+        var restApiId: AwsTemplateValue? = null
 
         class MethodResponse(
-                val responseModels: Map<String, Resource<Model>> = mapOf(),
+                @JsonSerialize(using = MapKeyToResourceSerializer::class) val responseModels: Map<String, Resource<Model>> = mapOf(),
                 val responseParameters: Map<String, Boolean> = mapOf(),
                 val statusCode: String? = null
         )
+
         class IntegrationResponse(
                 val responseParameters: Map<String, String> = mapOf(),
                 val responseTemplates: Map<String, String> = mapOf(),
                 val selectionPattern: String? = null,
                 val statusCode: String? = null
         )
+
         class Integration(
                 val cacheKeyParameters: List<String> = emptyList(),
                 val cacheNamespace: String? = null,
@@ -114,6 +121,19 @@ class ApiGateway {
                 val Type: String? = null,
                 val uri: String? = null
         )
+
+
+        class MapKeyToResourceSerializer : StdSerializer<Map<String, Resource<ResourceProperties>>>(emptyMap<String, Resource<ResourceProperties>>().javaClass) {
+            override fun serialize(value: Map<String, Resource<ResourceProperties>>?, gen: JsonGenerator?, provider: SerializerProvider?) {
+                if (value != null && gen != null) {
+                    gen.writeStartObject()
+                    value.forEach { key, value ->
+                        gen.writeObjectField(key, value)
+                    }
+                    gen.writeEndObject()
+                }
+            }
+        }
     }
 
     class Model : ResourceProperties("AWS::ApiGateway::Model") {
