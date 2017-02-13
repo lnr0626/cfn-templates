@@ -28,3 +28,5 @@ inline fun <reified T : ResourceProperties> resource(id: String, vararg attribut
     properties.init()
     return Resource(id = id, attributes = attributes.asList(), properties = properties)
 }
+
+

@@ -1,3 +1,4 @@
 rootProject.name = 'cfn'
 
 include ':base-models'
+include ':aws'
