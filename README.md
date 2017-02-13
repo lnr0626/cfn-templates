@@ -28,7 +28,7 @@ The following is an example taken from the AWS CFN documentation and some though
     
   "Parameters" : {
     "EnvType" : {
-      "Description" : "Environment type.",
+      "Description" : "Environment resourceType.",
       "Default" : "test",
       "Type" : "String",
       "AllowedValues" : ["prod", "test"],
