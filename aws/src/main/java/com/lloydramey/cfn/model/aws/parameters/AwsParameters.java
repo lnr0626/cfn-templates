@@ -1,8 +1,8 @@
-package com.lloydramey.cfn.model.parameters;
+package com.lloydramey.cfn.model.aws.parameters;
 
 import com.lloydramey.cfn.model.ParameterType;
 
-public class AWS {
+public class AwsParameters {
     public static class EC2 {
         public static final ParameterType AvailabilityZone = new ParameterType.Single("AWS::EC2::AvailabilityZone::Name");
         public static final ParameterType Image = new ParameterType.Single("AWS::EC2::Image::Id");
