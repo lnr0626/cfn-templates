@@ -17,11 +17,16 @@ package com.lloydramey.cfn.model.aws
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
+import com.lloydramey.cfn.model.aws.apigateway.ApiStage
 import com.lloydramey.cfn.model.aws.apigateway.Integration
 import com.lloydramey.cfn.model.aws.apigateway.MethodResponse
+import com.lloydramey.cfn.model.aws.apigateway.MethodSetting
+import com.lloydramey.cfn.model.aws.apigateway.QuotaSettings
+import com.lloydramey.cfn.model.aws.apigateway.S3Location
+import com.lloydramey.cfn.model.aws.apigateway.ThrottleSettings
 import com.lloydramey.cfn.model.functions.AwsTemplateValue
 import com.lloydramey.cfn.model.resources.Required
-import com.lloydramey.cfn.model.resources.Resource
 import com.lloydramey.cfn.model.resources.ResourceProperties
 
 @Suppress("unused")
@@ -80,7 +85,7 @@ class ApiGateway {
         var authorizerId: AwsTemplateValue? = null
         var integration: Integration? = null
         var methodResponses: MutableList<MethodResponse> = mutableListOf()
-        @JsonSerialize(using = StringToResourceMapSerializer::class) var requestModels: MutableMap<String, Resource<Model>> = mutableMapOf()
+        @JsonSerialize(using = StringToResourceMapSerializer::class) var requestModels: MutableMap<String, com.lloydramey.cfn.model.resources.Resource<Model>> = mutableMapOf()
         var requestParameters: MutableMap<String, Boolean> = mutableMapOf()
 
     }
@@ -88,11 +93,50 @@ class ApiGateway {
     class Model : ResourceProperties("AWS::ApiGateway::Model") {
         @Required var restApiId: AwsTemplateValue? = null
         //TODO: Allow specifying json file, or create schema representation in kotlin?
-        @Required @JsonInclude var schema: MutableMap<String, Any> = mutableMapOf()
+        @Required @JsonInclude var schema: MutableMap<String, Any>? = null
 
         var contentType: AwsTemplateValue? = null
         var description: AwsTemplateValue? = null
         var name: AwsTemplateValue? = null
     }
 
+    class Resource : ResourceProperties("AWS::ApiGateway::Resource") {
+        @Required var parentId: AwsTemplateValue? = null
+        @Required var pathPart: AwsTemplateValue? = null
+        @Required var restApiId: AwsTemplateValue? = null
+    }
+
+    class RestApi : ResourceProperties("AWS::ApiGateway::RestApi") {
+        //TODO: Allow specifying a file containing the json/yaml representation
+        var body: AwsTemplateValue? = null
+        var bodyS3Location: S3Location? = null
+        var cloneFrom: AwsTemplateValue? = null
+        var description: AwsTemplateValue? = null
+        var failOnWarnings: AwsTemplateValue? = null
+        var name: AwsTemplateValue? = null
+        var parameters: MutableList<AwsTemplateValue> = mutableListOf()
+    }
+
+    class Stage : ResourceProperties("AWS::ApiGateway::Stage") {
+        @Required var deploymentId: AwsTemplateValue? = null
+        @Required var restApiId: AwsTemplateValue? = null
+        @Required var stageName: AwsTemplateValue? = null
+
+        var cacheClusterEnabled: AwsTemplateValue? = null
+        var cacheClusterSize: AwsTemplateValue? = null
+        var clientCertificateId: AwsTemplateValue? = null
+        var description: AwsTemplateValue? = null
+        var methodSettings: MutableList<MethodSetting> = mutableListOf()
+        var variables: MutableMap<String, String> = mutableMapOf()
+    }
+
+    class UsagePlan : ResourceProperties("AWS::ApiGateway::UsagePlan") {
+        var ApiStages: MutableList<ApiStage> = mutableListOf()
+        var Description: AwsTemplateValue? = null
+        var Quota: QuotaSettings? = null
+        var Throttle: ThrottleSettings? = null
+        var UsagePlanName: AwsTemplateValue? = null
+    }
+
 }
+
