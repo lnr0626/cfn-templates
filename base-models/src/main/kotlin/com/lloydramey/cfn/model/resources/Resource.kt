@@ -37,7 +37,7 @@ abstract class ResourceProperties(@JsonIgnore val resourceType: String) {
             .map { it.name }
             .toTypedArray()
 
-        if(missingRequiredProperties.isNotEmpty()) {
+        if (missingRequiredProperties.isNotEmpty()) {
             throw RequiredAttributeMissingException(*missingRequiredProperties)
         }
     }

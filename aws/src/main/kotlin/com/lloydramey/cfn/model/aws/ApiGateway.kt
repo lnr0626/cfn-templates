@@ -17,7 +17,6 @@ package com.lloydramey.cfn.model.aws
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.lloydramey.cfn.model.aws.apigateway.ApiStage
 import com.lloydramey.cfn.model.aws.apigateway.Integration
 import com.lloydramey.cfn.model.aws.apigateway.MethodResponse

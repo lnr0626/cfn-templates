@@ -33,5 +33,5 @@ data class Output(
     val export: Export? = null
 ) {
     @JsonAnyGetter
-    fun json() = if(condition != null) mapOf("Condition" to condition) else emptyMap()
+    fun json() = if (condition != null) mapOf("Condition" to condition) else emptyMap()
 }
