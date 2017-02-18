@@ -26,6 +26,12 @@ This list may be slighted outdated. You can get the most up to date list by runn
 - AWS::ApiGateway::UsagePlan
 - AWS::ApplicationAutoScaling::ScalableTarget
 - AWS::ApplicationAutoScaling::ScalingPolicy
+- AWS::AutoScaling::AutoScalingGroup
+- AWS::AutoScaling::LaunchConfiguration
+- AWS::AutoScaling::LifecycleHook
+- AWS::AutoScaling::ScalingPolicy
+- AWS::AutoScaling::ScheduledAction
+- AWS::CertificateManager::Certificate
 
 
 ## Some general thoughts
