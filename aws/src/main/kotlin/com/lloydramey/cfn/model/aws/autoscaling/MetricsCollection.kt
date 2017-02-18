@@ -13,16 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.model.aws.applicationautoscaling
+package com.lloydramey.cfn.model.aws.autoscaling
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-
-@JsonSerialize(using = ToStringSerializer::class)
-sealed class AdjustmentType(val type: String) {
-    object ChangeInCapacity : AdjustmentType("ChangeInCapacity")
-    object PercentChangeInCapacity : AdjustmentType("PercentChangeInCapacity")
-    object ExactCapacity : AdjustmentType("ExactCapacity")
-
-    override fun toString() = type
-}
+data class MetricsCollection(val granularity: String, val metrics: List<String> = emptyList())

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.model.aws.applicationautoscaling
+package com.lloydramey.cfn.model.aws.autoscaling
 
-data class StepAdjustment(
-    val metricIntevalLowerBound: Number? = null,
-    val metricIntevalUpperBound: Number? = null,
-    val scalingAdjustment: Int
+data class BlockDeviceMapping(
+    val deviceName: String,
+    val ebs: EbsBlockDevice? = null,
+    val noDevice: Boolean? = null,
+    val virtualName: String? = null
 )

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.model.aws.applicationautoscaling
+package com.lloydramey.cfn.model.aws.autoscaling
 
-import com.lloydramey.cfn.model.aws.autoscaling.AdjustmentType
-import com.lloydramey.cfn.model.aws.autoscaling.StepAdjustment
-
-data class StepScalingPolicyConfiguration(
-    val adjustmentType: AdjustmentType? = null,
-    val cooldown: Int? = null,
-    val metricAggregationType: MetricAggregationType? = null,
-    val minAdjustmentMagnitude: Int? = null,
-    val stepAdjustments: List<StepAdjustment>? = null
-)
+data class NotificationConfigurations(val notificationTypes: List<String>, val topicARN: String)
