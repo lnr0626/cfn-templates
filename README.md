@@ -7,6 +7,29 @@ such as troposphere (which is a wonderful project, I just can't use it for vario
 I chose kotlin for this project mostly because I enjoy writing code in it, and it's JVM based. It also 
 provides (in most cases) a concise syntax for specifying things.
 
+## Supported Types
+
+This list may be slighted outdated. You can get the most up to date list by running the test
+ com.lloydramey.cfn.model.ListAllResourcePropertyTypes.listAllResourcePropertyTypes() - this will print the list of supported types to stdout
+ 
+- AWS::ApiGateway::Account
+- AWS::ApiGateway::ApiKey
+- AWS::ApiGateway::Authorizer
+- AWS::ApiGateway::BasePathMapping
+- AWS::ApiGateway::ClientCertificate
+- AWS::ApiGateway::Deployment
+- AWS::ApiGateway::Method
+- AWS::ApiGateway::Model
+- AWS::ApiGateway::Resource
+- AWS::ApiGateway::RestApi
+- AWS::ApiGateway::Stage
+- AWS::ApiGateway::UsagePlan
+- AWS::ApplicationAutoScaling::ScalableTarget
+- AWS::ApplicationAutoScaling::ScalingPolicy
+
+
+## Some general thoughts
+
 The following is an example taken from the AWS CFN documentation and some thoughts on how that could look:
 
 ```json

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.lloydramey.cfn.model.aws
+
 import com.lloydramey.cfn.model.resources.ResourceProperties
 import org.junit.Test
 import org.reflections.Reflections
@@ -24,6 +26,8 @@ class ListAllResourcePropertyTypes {
 
         println(subtypes
             .map { it.getMethod("getResourceType").invoke(it.newInstance()) }
+            .map(Any::toString)
+            .sorted()
             .joinToString("\n"))
 
     }
