@@ -19,22 +19,44 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.lloydramey.cfn.model.functions.ReferencableWithAttributes
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.memberProperties
 
-abstract class ResourceDefinitionAttribute(@JsonIgnore val name: String)
+class RequiredAttributeMissingException(vararg attributeName: String) :
+    IllegalStateException("Missing required parameters: ${attributeName.joinToString(", ")}")
+
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Required
+
 abstract class ResourceProperties(@JsonIgnore val resourceType: String) {
-    open fun validate() = {}
-}
+    open fun validate() {
+        val missingRequiredProperties = this::class.memberProperties
+            .filter { it.isLateinit || hasAnnotation(it, Required::class) }
+            .filter { it.getter.call() == null }
+            .map { it.name }
+            .toTypedArray()
 
+        if(missingRequiredProperties.isNotEmpty()) {
+            throw RequiredAttributeMissingException(*missingRequiredProperties)
+        }
+    }
+
+    private fun hasAnnotation(property: KProperty1<out ResourceProperties, Any?>, annotation: KClass<out Annotation>): Boolean {
+        return property.annotations.any { annotation.isInstance(it) }
+    }
+}
+abstract class ResourceDefinitionAttribute(@JsonIgnore val name: String)
+
+@Suppress("unused")
 @JsonIgnoreProperties("Id", "Attributes")
 class Resource<out T : ResourceProperties>(
-        id: String,
-        @JsonIgnore val attributes: List<ResourceDefinitionAttribute> = emptyList(),
-        val properties: T
+    id: String,
+    @JsonIgnore val attributes: List<ResourceDefinitionAttribute> = emptyList(),
+    val properties: T
 ) : ReferencableWithAttributes(id) {
-    @Suppress("unused")
     val type = properties.resourceType
 
-    @Suppress("unused")
     @JsonAnyGetter
     fun json() = attributes.associateBy { it.name }
 
