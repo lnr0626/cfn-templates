@@ -1,9 +1,5 @@
 package com.lloydramey.cfn.model.aws
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.lloydramey.cfn.model.aws.applicationautoscaling.AdjustmentType
-import com.lloydramey.cfn.model.aws.applicationautoscaling.MetricAggregationType
 import com.lloydramey.cfn.model.aws.applicationautoscaling.StepScalingPolicyConfiguration
 import com.lloydramey.cfn.model.functions.AwsTemplateValue
 import com.lloydramey.cfn.model.resources.Required
