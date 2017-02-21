@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.lloydramey.cfn.model.functions.AwsTemplateValue
 import com.lloydramey.cfn.model.functions.Val
-import com.lloydramey.cfn.model.resources.ConditionalOn
+import com.lloydramey.cfn.model.resources.attributes.ConditionalOn
 
 data class Export(val name: AwsTemplateValue) {
     constructor(name: String) : this(Val(name))

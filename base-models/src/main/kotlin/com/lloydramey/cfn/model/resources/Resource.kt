@@ -19,34 +19,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.lloydramey.cfn.model.functions.ReferencableWithAttributes
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
-import kotlin.reflect.full.memberProperties
-
-class RequiredAttributeMissingException(vararg attributeName: String) :
-    IllegalStateException("Missing required parameters: ${attributeName.joinToString(", ")}")
-
-@Retention(AnnotationRetention.RUNTIME)
-annotation class Required
-
-abstract class ResourceProperties(@JsonIgnore val resourceType: String) {
-    open fun validate() {
-        val missingRequiredProperties = this::class.memberProperties
-            .filter { it.isLateinit || hasAnnotation(it, Required::class) }
-            .filter { it.getter.call() == null }
-            .map { it.name }
-            .toTypedArray()
-
-        if (missingRequiredProperties.isNotEmpty()) {
-            throw RequiredAttributeMissingException(*missingRequiredProperties)
-        }
-    }
-
-    private fun hasAnnotation(property: KProperty1<out ResourceProperties, Any?>, annotation: KClass<out Annotation>): Boolean {
-        return property.annotations.any { annotation.isInstance(it) }
-    }
-}
-abstract class ResourceDefinitionAttribute(@JsonIgnore val name: String)
+import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
 @Suppress("unused")
 @JsonIgnoreProperties("Id", "Attributes")

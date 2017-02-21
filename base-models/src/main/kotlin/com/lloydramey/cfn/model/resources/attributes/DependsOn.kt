@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.model.resources
+package com.lloydramey.cfn.model.resources.attributes
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import com.lloydramey.cfn.model.resources.Resource
+import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
+import com.lloydramey.cfn.model.resources.ResourceProperties
 
 @JsonSerialize(using = DependsOnSerializer::class)
 data class DependsOn(val res: Resource<ResourceProperties>, val resources: List<Resource<ResourceProperties>>) : ResourceDefinitionAttribute("DependsOn") {

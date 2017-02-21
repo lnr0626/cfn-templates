@@ -47,8 +47,8 @@ class FindInMap(map: Mapping, topLevel: AwsTemplateValue, secondLevel: AwsTempla
 class GetAtt(res: ReferencableWithAttributes, attr: String) : Fn("Fn::GetAtt", listOf(res.id, attr)), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class GetAZs(region: String) : Fn("Fn::GetAZs", region), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class ImportValue(v: AwsTemplateValue) : Fn("Fn::ImportValue", v), AwsTemplateValue, IntrinsicFunction
-class Join(values: List<AwsTemplateValue>) : Fn("Fn::Join", values), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues {
-    constructor(vararg values: AwsTemplateValue) : this(values.asList())
+class Join(delimiter: String, values: List<AwsTemplateValue>) : Fn("Fn::Join", listOf(delimiter, values)), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues {
+    constructor(delimiter: String, vararg values: AwsTemplateValue) : this(delimiter, values.asList())
 }
 class Select(index: Int, vararg values: AwsTemplateValue) : Fn("Fn::Select", listOf(index.toString(), if (values.size > 1) values.asList() else values[0])), AwsTemplateValue, IntrinsicFunction, AllowedInIfValues
 class Split(delimiter: String, source: AwsTemplateValue) : Fn("Fn::Split", listOf(delimiter, source)), AwsTemplateValue, IntrinsicFunction, AllowedInConditionFunction

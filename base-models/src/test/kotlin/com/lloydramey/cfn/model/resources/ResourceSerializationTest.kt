@@ -16,6 +16,17 @@
 package com.lloydramey.cfn.model.resources
 
 import com.lloydramey.cfn.model.TestHelper
+import com.lloydramey.cfn.model.resources.attributes.AutoScalingCreationPolicy
+import com.lloydramey.cfn.model.resources.attributes.AutoScalingReplacingUpdate
+import com.lloydramey.cfn.model.resources.attributes.AutoScalingRollingUpdate
+import com.lloydramey.cfn.model.resources.attributes.AutoScalingScheduledAction
+import com.lloydramey.cfn.model.resources.attributes.CreationPolicy
+import com.lloydramey.cfn.model.resources.attributes.DeletionPolicy
+import com.lloydramey.cfn.model.resources.attributes.DependsOn
+import com.lloydramey.cfn.model.resources.attributes.MetadataAttr
+import com.lloydramey.cfn.model.resources.attributes.ResourceSignal
+import com.lloydramey.cfn.model.resources.attributes.UpdatePolicy
+import com.lloydramey.cfn.model.resources.attributes.minutes
 import net.javacrumbs.jsonunit.JsonMatchers.jsonEquals
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

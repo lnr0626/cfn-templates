@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.model
+package com.lloydramey.cfn.model.resources.attributes
 
-import com.lloydramey.cfn.model.functions.AwsTemplateValue
-import com.lloydramey.cfn.model.functions.Val
-import com.lloydramey.cfn.model.resources.IntVerifier
-import org.junit.Test
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
+import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
-class OutputSerializationTest {
-    @Test
-    fun output() {
-        var test: AwsTemplateValue by IntVerifier(min = -4, max = 4)
+@JsonSerialize(using = ToStringSerializer::class)
+sealed class DeletionPolicy(val value: String) : ResourceDefinitionAttribute("DeletionPolicy") {
+    object Retain : DeletionPolicy("Retain")
+    object Delete : DeletionPolicy("Delete")
+    object Snapshot : DeletionPolicy("Snapshot")
 
-        test = Val(3)
-
-        println(test)
-
-        test = Val(33)
-        println(test)
+    override fun toString(): String {
+        return this.value
     }
 }
