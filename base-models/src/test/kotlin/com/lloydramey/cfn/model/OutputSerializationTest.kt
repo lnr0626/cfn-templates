@@ -15,21 +15,10 @@
  */
 package com.lloydramey.cfn.model
 
-import com.lloydramey.cfn.model.functions.AwsTemplateValue
-import com.lloydramey.cfn.model.functions.Val
-import com.lloydramey.cfn.model.resources.IntVerifier
 import org.junit.Test
 
 class OutputSerializationTest {
     @Test
     fun output() {
-        var test: AwsTemplateValue by IntVerifier(min = -4, max = 4)
-
-        test = Val(3)
-
-        println(test)
-
-        test = Val(33)
-        println(test)
     }
 }
