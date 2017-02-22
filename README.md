@@ -107,7 +107,7 @@ The following is an example taken from the AWS CFN documentation and some though
 ```
 
 ```kotlin
-val EnvType = parameter("EnvType", Types.String) {
+val EnvType = parameter("EnvType", Str) {
     description = "Environment Type"
     default = "test"
     allowedValues = listOf("prod", "test")
@@ -131,23 +131,16 @@ val volume = resource<Volume>("NewVolume", ConditionalOn(CreateProdResource)) {
     size = Val(100)
     availabilityZone = instance["AvailabilityZone"]
 }
-val attachment = resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionalOn(CreateProdResource)) {
+resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionalOn(CreateProdResource)) {
     instanceId = Ref(instance)
     volumeId = Ref(volume)
     device = Val("/dev/sdh")
 }
 
-val volumeId = output("VolumeId", ConditionalOn(CreateProdResource)) {
+output("VolumeId", ConditionalOn(CreateProdResource)) {
     value = Ref(volume)
 }
 
-val template = Template(
-    parameters = listOf(EnvType),
-    mappings = listOf(RegionMap),
-    conditions = listOf(CreateProdResource),
-    resources = listOf(instance, attachment, volume),
-    outputs = listOf(volumeId)
-)
 ```
 
 I'm still playing around with syntax to see what I think looks nice and makes sense.

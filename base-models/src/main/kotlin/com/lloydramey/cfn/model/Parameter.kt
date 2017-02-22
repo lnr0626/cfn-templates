@@ -16,34 +16,63 @@
 package com.lloydramey.cfn.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.lloydramey.cfn.model.functions.Referencable
 import com.lloydramey.cfn.model.parameters.Types
 
 @JsonIgnoreProperties("Id")
 class Parameter(
-        val allowedPattern: String = "",
-        val allowedValues: List<String> = listOf(),
-        val constraintDescription: String = "",
-        val default: String = "",
-        val description: String = "",
-        val maxLength: Number? = null,
-        val maxValue: Number? = null,
-        val minLength: Number? = null,
-        val minValue: Number? = null,
-        val noEcho: String = "",
-        val type: ParameterType,
-        id: String
+    id: String,
+    val type: ParameterType
 ) : Referencable(id) {
-    init {
-        if (isNumberParameter() && areStringOnlyFieldsPopulated()) {
-            throw IllegalArgumentException("You cannot specify MinLength, MaxLength, or AllowedPattern for a Number Parameter ($id)")
-        } else if (isNotNumberParameter() && areNumberOnlyFieldsPopulated()) {
-            throw IllegalArgumentException("You cannot specify MinValue or MaxValue for a Number Parameter ($id)")
+    var allowedValues: List<String> = listOf()
+    var constraintDescription: String = ""
+    var description: String = ""
+    @JsonSerialize(using = ToStringSerializer::class) var noEcho: Boolean? = null
+    var allowedPattern: String = ""
+        set(value) {
+            throwIfIsNumber("AllowedPattern")
+            field = value
         }
-    }
+    var default: String = ""
+        set(value) {
+            if(isNumberParameter() && value.toLongOrNull() == null) {
+                throw IllegalArgumentException("Default must be a valid number for Number Parameters")
+            }
+        }
+    @JsonSerialize(using = ToStringSerializer::class) var maxLength: Number? = null
+        set(value) {
+            throwIfIsNumber("MaxLength")
+            field = value
+        }
+    @JsonSerialize(using = ToStringSerializer::class) var minLength: Number? = null
+        set(value) {
+            throwIfIsNumber("MinLength")
+            field = value
+        }
+    @JsonSerialize(using = ToStringSerializer::class) var maxValue: Number? = null
+        set(value) {
+            throwIfIsNotNumber("MaxValue")
+            field = value
+        }
+    @JsonSerialize(using = ToStringSerializer::class) var minValue: Number? = null
+        set(value) {
+            throwIfIsNotNumber("MinValue")
+            field = value
+        }
 
     private fun isNumberParameter() = type == Types.Number || type == ParameterType.List(Types.Number)
     private fun isNotNumberParameter() = !isNumberParameter()
-    private fun areStringOnlyFieldsPopulated() = minLength != null || maxLength != null || allowedPattern != ""
-    private fun areNumberOnlyFieldsPopulated() = minValue != null || minLength != null
+
+    private fun throwIfIsNotNumber(fieldName: String) {
+        if (isNotNumberParameter()) {
+            throw IllegalArgumentException("You cannot specify $fieldName for a Number Parameter")
+        }
+    }
+    private fun throwIfIsNumber(fieldName: String) {
+        if (isNumberParameter()) {
+            throw IllegalArgumentException("You cannot specify $fieldName for a Number Parameter")
+        }
+    }
 }

@@ -48,6 +48,8 @@ class Test {
             logger
         )
 
+        println("Constructing")
+
         val obj = script.newInstance()
 
         println(obj::class.memberProperties.associate { it.name to it.call(obj) })

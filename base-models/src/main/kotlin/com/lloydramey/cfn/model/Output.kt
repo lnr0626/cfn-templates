@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.lloydramey.cfn.model.functions.AwsTemplateValue
 import com.lloydramey.cfn.model.functions.Val
+import com.lloydramey.cfn.model.resources.Required
 import com.lloydramey.cfn.model.resources.attributes.ConditionalOn
 
 data class Export(val name: AwsTemplateValue) {
@@ -26,12 +27,13 @@ data class Export(val name: AwsTemplateValue) {
 }
 
 data class Output(
-    @JsonIgnore val name: String,
-    @JsonIgnore val condition: ConditionalOn? = null,
-    val value: AwsTemplateValue,
-    val description: String? = null,
-    val export: Export? = null
+    @JsonIgnore val id: String,
+    @JsonIgnore val condition: ConditionalOn? = null
 ) {
+    @Required var value: AwsTemplateValue? = null
+    var description: String? = null
+    var export: Export? = null
+
     @JsonAnyGetter
     fun json() = if (condition != null) mapOf("Condition" to condition) else emptyMap()
 }
