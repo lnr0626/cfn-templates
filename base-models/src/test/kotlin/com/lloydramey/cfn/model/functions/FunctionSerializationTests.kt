@@ -92,8 +92,8 @@ class FunctionSerializationTests {
     @Test
     fun join() {
         assertThat(
-                json(Join(Val("Test"), Val("Another"))),
-                jsonEquals("{'Fn::Join': ['Test', 'Another']}")
+                json(Join(", ", Val("Test"), Val("Another"))),
+                jsonEquals("{'Fn::Join': [', ', ['Test', 'Another']]}")
         )
     }
 
