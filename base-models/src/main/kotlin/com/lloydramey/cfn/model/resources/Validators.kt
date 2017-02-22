@@ -42,12 +42,18 @@ abstract class AwsValueVerifier : ReadWriteProperty<ResourceProperties, AwsTempl
         if (int != null) {
             validate(int, resourceType, name)
         } else {
-            validate(value.value, resourceType, name)
+            try {
+                val bool = value.value.toBoolean()
+                validate(bool, resourceType, name)
+            } catch(e: Exception) {
+                validate(value.value, resourceType, name)
+            }
         }
     }
 
     protected abstract fun validate(int: Int, resourceType: String, name: String)
     protected abstract fun validate(str: String, resourceType: String, name: String)
+    protected abstract fun validate(bool: Boolean, resourceType: String, name: String)
 }
 
 class IntValidator(val min: Int = Int.MIN_VALUE, val max: Int = Int.MAX_VALUE) : AwsValueVerifier() {
@@ -60,6 +66,24 @@ class IntValidator(val min: Int = Int.MIN_VALUE, val max: Int = Int.MAX_VALUE) :
         throw IllegalArgumentException("You must specify an Int for $name in $resourceType")
     }
 
+    override fun validate(bool: Boolean, resourceType: String, name: String) {
+        throw IllegalArgumentException("You must specify an Int for $name in $resourceType")
+    }
+
+}
+
+class BooleanValidator : AwsValueVerifier() {
+    override fun validate(int: Int, resourceType: String, name: String) {
+        throw IllegalArgumentException("You must specify an Boolean for $name in $resourceType")
+    }
+
+    override fun validate(str: String, resourceType: String, name: String) {
+        throw IllegalArgumentException("You must specify an Boolean for $name in $resourceType")
+    }
+
+    override fun validate(bool: Boolean, resourceType: String, name: String) {
+        // no-op, just verifying that it is a boolean
+    }
 }
 
 class StringValidator(
@@ -69,6 +93,10 @@ class StringValidator(
 ) : AwsValueVerifier() {
     override fun validate(int: Int, resourceType: String, name: String) {
         validate(int.toString(), resourceType, name)
+    }
+
+    override fun validate(bool: Boolean, resourceType: String, name: String) {
+        validate(bool.toString(), resourceType, name)
     }
 
     override fun validate(str: String, resourceType: String, name: String) {

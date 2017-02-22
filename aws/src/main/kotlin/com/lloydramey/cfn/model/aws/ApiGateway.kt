@@ -25,8 +25,10 @@ import com.lloydramey.cfn.model.aws.apigateway.QuotaSettings
 import com.lloydramey.cfn.model.aws.apigateway.S3Location
 import com.lloydramey.cfn.model.aws.apigateway.ThrottleSettings
 import com.lloydramey.cfn.model.functions.AwsTemplateValue
+import com.lloydramey.cfn.model.resources.BooleanValidator
 import com.lloydramey.cfn.model.resources.Required
 import com.lloydramey.cfn.model.resources.ResourceProperties
+import com.lloydramey.cfn.model.resources.StringValidator
 
 @Suppress("unused")
 class ApiGateway {
@@ -35,9 +37,9 @@ class ApiGateway {
     }
 
     class ApiKey : ResourceProperties("AWS::ApiGateway::ApiKey") {
-        var description: AwsTemplateValue? = null
-        var enabled: AwsTemplateValue? = null
-        var name: AwsTemplateValue? = null
+        var description: AwsTemplateValue? by StringValidator()
+        var enabled: AwsTemplateValue? by BooleanValidator()
+        var name: AwsTemplateValue? by StringValidator()
         var stageKeys: MutableList<StageKey> = mutableListOf()
     }
 
