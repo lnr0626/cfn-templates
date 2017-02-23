@@ -17,7 +17,6 @@ package com.lloydramey.cfn.model.resources.attributes
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
 @JsonSerialize(using = ToStringSerializer::class)
 sealed class DeletionPolicy(val value: String) : ResourceDefinitionAttribute("DeletionPolicy") {

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.lloydramey.cfn.model.resources.Resource
-import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 import com.lloydramey.cfn.model.resources.ResourceProperties
 
 @JsonSerialize(using = DependsOnSerializer::class)

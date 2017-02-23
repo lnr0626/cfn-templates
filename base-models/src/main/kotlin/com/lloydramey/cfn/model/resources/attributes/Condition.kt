@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.lloydramey.cfn.model.functions.Condition
-import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
 @JsonSerialize(using = ConditionalOnSerializer::class)
 data class ConditionalOn(val condition: Condition) : ResourceDefinitionAttribute("Condition")

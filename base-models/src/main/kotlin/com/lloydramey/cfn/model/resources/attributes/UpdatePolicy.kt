@@ -17,7 +17,6 @@ package com.lloydramey.cfn.model.resources.attributes
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
 data class AutoScalingReplacingUpdate(@JsonSerialize(using=ToStringSerializer::class) val willReplace: Boolean? = null)
 

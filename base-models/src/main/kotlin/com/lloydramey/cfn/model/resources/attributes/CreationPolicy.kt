@@ -17,7 +17,6 @@ package com.lloydramey.cfn.model.resources.attributes
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
 @JsonSerialize(using=ToStringSerializer::class)
 data class ISO8601Duration(val hours: Int = 0, val minutes: Int = 0, val seconds: Int = 0) {

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
 
 @JsonSerialize(using = MetadataAttributeSerializer::class)
 class MetadataAttr(@JsonIgnore val properties: Map<String, Any>) : ResourceDefinitionAttribute("Metadata")
