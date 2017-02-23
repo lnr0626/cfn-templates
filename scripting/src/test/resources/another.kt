@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.scripting
+package tests
 
-object ImplicitImports {
-    val list = listOf(
-        "com.lloydramey.cfn.scripting.*",
-        "com.lloydramey.cfn.model.aws.*",
-        "com.lloydramey.cfn.model.parameters.Types.*"
-    )
-}
+class Testing

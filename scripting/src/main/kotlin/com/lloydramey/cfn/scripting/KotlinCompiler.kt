@@ -17,13 +17,10 @@
 package com.lloydramey.cfn.scripting
 
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
-import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.MessageUtil
 import org.jetbrains.kotlin.cli.common.messages.OutputMessageUtil
-import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.compileBunchOfSources
@@ -45,7 +42,6 @@ import org.jetbrains.kotlin.config.addKotlinSourceRoots
 import org.jetbrains.kotlin.script.KotlinScriptDefinition
 import org.jetbrains.kotlin.utils.PathUtil
 import org.jetbrains.kotlin.utils.addToStdlib.singletonList
-import org.slf4j.Logger
 import java.io.File
 
 internal
@@ -56,10 +52,10 @@ fun compileKotlinScriptToDirectory(
     additionalSourceFiles: List<File>,
     classPath: List<File>,
     classLoader: ClassLoader,
-    log: Logger): Class<*> {
+    messageCollector: MessageCollector): Class<*> {
 
     withRootDisposable { rootDisposable ->
-        withMessageCollectorFor(log) { messageCollector ->
+        withMessageCollector(messageCollector) { messageCollector ->
             val files = scriptFile.singletonList() + additionalSourceFiles
             val configuration = compilerConfigurationFor(messageCollector, files).apply {
                 put(RETAIN_OUTPUT_IN_MEMORY, true)
@@ -79,32 +75,30 @@ internal
 fun compileToJar(
     outputJar: File,
     sourceFiles: Iterable<File>,
-    logger: Logger,
+    messageCollector: MessageCollector,
     classPath: Iterable<File> = emptyList()): Boolean =
 
-    compileTo(OUTPUT_JAR, outputJar, sourceFiles, logger, classPath)
-
+    compileTo(OUTPUT_JAR, outputJar, sourceFiles, messageCollector, classPath)
 
 internal
 fun compileToDirectory(
     outputDirectory: File,
     sourceFiles: Iterable<File>,
-    logger: Logger,
+    messageCollector: MessageCollector,
     classPath: Iterable<File> = emptyList()): Boolean =
 
-    compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, logger, classPath)
-
+    compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, messageCollector, classPath)
 
 private
 fun compileTo(
     outputConfigurationKey: CompilerConfigurationKey<File>,
     output: File,
     sourceFiles: Iterable<File>,
-    logger: Logger,
+    messageCollector: MessageCollector,
     classPath: Iterable<File>): Boolean {
 
     withRootDisposable { disposable ->
-        withMessageCollectorFor(logger) { messageCollector ->
+        withMessageCollector(messageCollector) { messageCollector ->
             val configuration = compilerConfigurationFor(messageCollector, sourceFiles).apply {
                 put(outputConfigurationKey, output)
                 setModuleName(output.nameWithoutExtension)
@@ -117,11 +111,9 @@ fun compileTo(
     }
 }
 
-
 private
 val kotlinStdlibJar: File
     get() = PathUtil.getResourcePathForClass(Unit::class.java)
-
 
 private
 inline fun <T> withRootDisposable(action: (Disposable) -> T): T {
@@ -133,10 +125,8 @@ inline fun <T> withRootDisposable(action: (Disposable) -> T): T {
     }
 }
 
-
 private
-inline fun <T> withMessageCollectorFor(log: Logger, action: (MessageCollector) -> T): T {
-    val messageCollector = messageCollectorFor(log)
+inline fun <T> withMessageCollector(messageCollector: MessageCollector, action: (MessageCollector) -> T): T {
     try {
         return action(messageCollector)
     } catch (ex: CompilationException) {
@@ -145,15 +135,13 @@ inline fun <T> withMessageCollectorFor(log: Logger, action: (MessageCollector) -
             OutputMessageUtil.renderException(ex),
             MessageUtil.psiElementToMessageLocation(ex.element))
 
-        throw IllegalStateException("Internal error: ${OutputMessageUtil.renderException(ex)}")
+        throw IllegalStateException("Internal error: ${OutputMessageUtil.renderException(ex)}", ex)
     }
 }
-
 
 private
 fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFile: File) =
     compilerConfigurationFor(messageCollector, listOf(sourceFile))
-
 
 private
 fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFiles: Iterable<File>): CompilerConfiguration =
@@ -163,44 +151,16 @@ fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFiles: It
         put<MessageCollector>(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, messageCollector)
     }
 
-
 private
 fun CompilerConfiguration.setModuleName(name: String) {
     put(CommonConfigurationKeys.MODULE_NAME, name)
 }
-
 
 private
 fun CompilerConfiguration.addScriptDefinition(scriptDef: KotlinScriptDefinition) {
     add(SCRIPT_DEFINITIONS, scriptDef)
 }
 
-
 private
 fun kotlinCoreEnvironmentFor(configuration: CompilerConfiguration, rootDisposable: Disposable) =
     KotlinCoreEnvironment.createForProduction(rootDisposable, configuration, EnvironmentConfigFiles.JVM_CONFIG_FILES)
-
-
-private
-fun messageCollectorFor(log: Logger): MessageCollector =
-    object : MessageCollector {
-        override fun hasErrors(): Boolean = false
-
-        override fun clear() {}
-
-        override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageLocation) {
-            fun msg() =
-                if (location == CompilerMessageLocation.NO_LOCATION) message
-                else "$message ($location)"
-
-            when (severity) {
-                in CompilerMessageSeverity.ERRORS -> log.error("Error: " + msg())
-                CompilerMessageSeverity.ERROR -> log.error(msg())
-                CompilerMessageSeverity.WARNING -> log.info("Warning: " + msg())
-                CompilerMessageSeverity.LOGGING -> log.info(msg())
-                CompilerMessageSeverity.INFO -> log.info(msg())
-                else -> {
-                }
-            }
-        }
-    }

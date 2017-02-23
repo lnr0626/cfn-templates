@@ -1,51 +1,45 @@
+/*
+ * Copyright 2017 Lloyd Ramey <lnr0626@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.lloydramey.cfn.scripting
 
-import org.jetbrains.kotlin.com.intellij.openapi.project.Project
-import org.jetbrains.kotlin.script.KotlinScriptDefinition
-import org.jetbrains.kotlin.script.KotlinScriptExternalDependencies
+import com.lloydramey.cfn.model.Template
+import com.lloydramey.cfn.model.aws.parameters.AwsParameters
+import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
+import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.utils.PathUtil
 import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.net.URLClassLoader
-import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 class Test {
 
-    fun scriptDefinitionFor(clazz: KClass<out Any>) = object : KotlinScriptDefinition(clazz) {
-        override fun <TF : Any> getDependenciesFor(
-            file: TF,
-            project: Project,
-            previousDependencies: KotlinScriptExternalDependencies?): KotlinScriptExternalDependencies? =
-
-            object : KotlinScriptExternalDependencies {
-                override val imports: Iterable<String>
-                    get() = ImplicitImports.list
-                override val classpath: Iterable<File>
-                    get() = getClassPath()
-            }
-    }
-
     @Test
     fun `test compiling script to build dir`() {
         val logger = LoggerFactory.getLogger("main")
-        val classLoader = Test::class.java.classLoader
 
-        val classPath = getClassPath()
+        val classpath = (getClassPath() + PathUtil.getJdkClassesRoots())
 
-        val urls = (classPath + PathUtil.getJdkClassesRoots()).map(File::toURL).toTypedArray()
-
-        val loader = URLClassLoader(urls, classLoader)
-
-        val script = compileKotlinScriptToDirectory(
+        val script = compileScript(
             File("build"),
             File("src/test/resources/test.kts"),
-            scriptDefinitionFor(ScriptWithNoArgs::class),
-            emptyList(),
-            classPath,
-            loader,
-            logger
+            listOf(File("src/test/resources/another.kt")),
+            classpath,
+            Test::class.java.classLoader,
+            PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, false)
         )
 
         println("Constructing")
@@ -55,11 +49,10 @@ class Test {
         println(obj::class.memberProperties.associate { it.name to it.call(obj) })
     }
 
-    private fun getClassPath(): List<File> {
-        val root = File("build/libs")
-        val classPath = root.list().map { File(root, it) }.toList()// + PathUtil.getJdkClassesRoots()
-
-        //        println(classPath.map { it.absolutePath }.joinToString("\n"))
-        return classPath
-    }
+    private fun getClassPath(): List<File> = listOf(
+        PathUtil.getResourcePathForClass(kotlin.properties.Delegates::class.java),
+        PathUtil.getResourcePathForClass(Template::class.java),
+        PathUtil.getResourcePathForClass(AwsParameters::class.java),
+        PathUtil.getResourcePathForClass(CfnTemplateScript::class.java)
+    ).distinct()
 }
