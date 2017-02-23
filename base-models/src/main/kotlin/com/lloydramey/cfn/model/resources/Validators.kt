@@ -45,7 +45,7 @@ abstract class AwsValueVerifier : ReadWriteProperty<ResourceProperties, AwsTempl
             try {
                 val bool = value.value.toBoolean()
                 validate(bool, resourceType, name)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 validate(value.value, resourceType, name)
             }
         }

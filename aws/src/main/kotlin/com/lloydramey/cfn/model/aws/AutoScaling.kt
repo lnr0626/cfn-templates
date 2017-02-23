@@ -69,13 +69,13 @@ class AutoScaling {
     }
 
     class LifecycleHook : ResourceProperties("AWS::AutoScaling::LifecycleHook") {
-       @Required var autoScalingGroupName: AwsTemplateValue? = null
-       var defaultResult: AwsTemplateValue? = null
-       var heartbeatTimeout: AwsTemplateValue? = null
-       @Required var lifecycleTransition: AwsTemplateValue? = null
-       var notificationMetadata: AwsTemplateValue? = null
-       @Required var notificationTargetARN: AwsTemplateValue? = null
-       @Required var roleARN: AwsTemplateValue? = null
+        @Required var autoScalingGroupName: AwsTemplateValue? = null
+        var defaultResult: AwsTemplateValue? = null
+        var heartbeatTimeout: AwsTemplateValue? = null
+        @Required var lifecycleTransition: AwsTemplateValue? = null
+        var notificationMetadata: AwsTemplateValue? = null
+        @Required var notificationTargetARN: AwsTemplateValue? = null
+        @Required var roleARN: AwsTemplateValue? = null
     }
 
     class ScalingPolicy : ResourceProperties("AWS::AutoScaling::ScalingPolicy") {

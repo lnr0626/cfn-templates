@@ -37,9 +37,10 @@ class Parameter(
         }
     var default: String = ""
         set(value) {
-            if(isNumberParameter() && value.toLongOrNull() == null) {
+            if (isNumberParameter() && value.toLongOrNull() == null) {
                 throw IllegalArgumentException("Default must be a valid number for Number Parameters")
             }
+            field = value
         }
     @JsonSerialize(using = ToStringSerializer::class) var maxLength: Number? = null
         set(value) {
@@ -70,6 +71,7 @@ class Parameter(
             throw IllegalArgumentException("You cannot specify $fieldName for a Number Parameter")
         }
     }
+
     private fun throwIfIsNumber(fieldName: String) {
         if (isNumberParameter()) {
             throw IllegalArgumentException("You cannot specify $fieldName for a Number Parameter")
