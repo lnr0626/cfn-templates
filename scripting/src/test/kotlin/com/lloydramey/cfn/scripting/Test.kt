@@ -44,9 +44,11 @@ class Test {
 
         println("Constructing")
 
-        val obj = script.newInstance()
+        val obj = script.newInstance() as CfnTemplateScript
 
         println(obj::class.memberProperties.associate { it.name to it.call(obj) })
+
+        println(obj.toTemplate())
     }
 
     private fun getClassPath(): List<File> = listOf(
