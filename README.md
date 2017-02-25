@@ -1,4 +1,4 @@
-# cfn-templates
+# cloudify-templates
 This project is aiming towards a better way to define cloud formation templates. I've found that
 writing templates by hand is an error prone and laborious task. It's also difficult to catch errors
 and to figure out what the error actually is. This project is based of ideas I've seen in other places - 
@@ -10,7 +10,7 @@ provides (in most cases) a concise syntax for specifying things.
 ## Supported Types
 
 This list may be slighted outdated. You can get the most up to date list by running the test
- com.lloydramey.cfn.model.ListAllResourcePropertyTypes.listAllResourcePropertyTypes() - this will print the list of supported types to stdout
+ com.lloydramey.cloudify.model.ListAllResourcePropertyTypes.listAllResourcePropertyTypes() - this will print the list of supported types to stdout
  
 - AWS::ApiGateway::Account
 - AWS::ApiGateway::ApiKey
@@ -151,3 +151,7 @@ makes it possible to create libraries of cloudformation templates that can be ea
 and when updated errors are caught much earlier, and a few others. I'm also generally of
 the opinion that code is easier to write, read, and debug that configuration files - that
 may be one of the main reasons I prefer tools such as gradle and gulp to maven and grunt.
+
+#TODO
+- Gradle plugin for compiling things
+- IDEA plugin for syntax highlighting nicities

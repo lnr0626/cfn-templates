@@ -30,9 +30,13 @@ import org.jetbrains.kotlin.script.ScriptTemplateDefinition
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
+@DslMarker
+annotation class TemplateClassMarker
+
 @ScriptTemplateDefinition(
     scriptFilePattern = ".*\\.template\\.kts"
 )
+@TemplateClassMarker
 abstract class CfnTemplateScript {
     var description: String = ""
     val metadata = mutableMapOf<String, Any>()

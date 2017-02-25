@@ -17,20 +17,21 @@ package com.lloydramey.cfn.scripting
 
 import com.lloydramey.cfn.model.Template
 import com.lloydramey.cfn.model.aws.parameters.AwsParameters
+import com.lloydramey.cfn.scripting.CfnTemplateScript
+import com.lloydramey.cfn.scripting.compileScript
 import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.utils.PathUtil
 import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.io.File
+import kotlin.properties.Delegates
 import kotlin.reflect.full.memberProperties
 
 class Test {
 
     @Test
     fun `test compiling script to build dir`() {
-        val logger = LoggerFactory.getLogger("main")
-
         val classpath = (getClassPath() + PathUtil.getJdkClassesRoots())
 
         val script = compileScript(
@@ -52,7 +53,7 @@ class Test {
     }
 
     private fun getClassPath(): List<File> = listOf(
-        PathUtil.getResourcePathForClass(kotlin.properties.Delegates::class.java),
+        PathUtil.getResourcePathForClass(Delegates::class.java),
         PathUtil.getResourcePathForClass(Template::class.java),
         PathUtil.getResourcePathForClass(AwsParameters::class.java),
         PathUtil.getResourcePathForClass(CfnTemplateScript::class.java)

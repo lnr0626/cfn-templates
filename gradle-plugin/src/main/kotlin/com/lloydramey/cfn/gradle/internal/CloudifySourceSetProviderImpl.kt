@@ -1,7 +1,7 @@
 package com.lloydramey.cfn.gradle.internal
 
-import com.lloydramey.cfn.gradle.plugin.CfnSourceSet
-import com.lloydramey.cfn.gradle.plugin.CfnSourceSetProvider
+import com.lloydramey.cfn.gradle.plugin.CloudifySourceSet
+import com.lloydramey.cfn.gradle.plugin.CloudifySourceSetProvider
 import groovy.lang.Closure
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.file.DefaultSourceDirectorySet
@@ -9,21 +9,21 @@ import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.file.collections.DefaultDirectoryFileTreeFactory
 import org.gradle.util.ConfigureUtil
 
-internal class CfnSourceSetProviderImpl constructor(private val fileResolver: FileResolver) : CfnSourceSetProvider {
-    override fun create(displayName: String): CfnSourceSet =
-        CfnSourceSetImpl(displayName, fileResolver)
+internal class CloudifySourceSetProviderImpl constructor(private val fileResolver: FileResolver) : CloudifySourceSetProvider {
+    override fun create(displayName: String): CloudifySourceSet =
+        CloudifySourceSetImpl(displayName, fileResolver)
 }
 
-private class CfnSourceSetImpl(displayName: String, resolver: FileResolver) : CfnSourceSet {
-    override val cfn: SourceDirectorySet =
+private class CloudifySourceSetImpl(displayName: String, resolver: FileResolver) : CloudifySourceSet {
+    override val cloudify: SourceDirectorySet =
         createDefaultSourceDirectorySet(displayName + " Kotlin source", resolver)
 
     init {
-        cfn.filter?.include("**/*.java", "**/*.kt", "**/*.template.kts")
+        cloudify.filter?.include("**/*.kt", "**/*.template.kts")
     }
 
-    override fun kotlin(configureClosure: Closure<Any?>?): CfnSourceSet {
-        ConfigureUtil.configure(configureClosure, cfn)
+    override fun kotlin(configureClosure: Closure<Any?>?): CloudifySourceSet {
+        ConfigureUtil.configure(configureClosure, cloudify)
         return this
     }
 }
