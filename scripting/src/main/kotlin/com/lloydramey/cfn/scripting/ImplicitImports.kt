@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.gradle.plugin
+package com.lloydramey.cfn.scripting
 
-internal interface CloudifySourceSetProvider {
-    fun create(displayName: String): CloudifySourceSet
+object ImplicitImports {
+    val list = listOf(
+        "com.lloydramey.cfn.scripting.*",
+        "com.lloydramey.cfn.model.aws.*",
+        "com.lloydramey.cfn.model.parameters.Types.*"
+    )
 }
