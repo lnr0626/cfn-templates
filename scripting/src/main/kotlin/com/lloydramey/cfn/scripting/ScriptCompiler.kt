@@ -47,7 +47,7 @@ internal fun scriptDefinitionFor(
         KotlinScriptExternalDependenciesWithImports(ImplicitImports.list, classpath)
 }
 
-internal fun compileScript(
+fun compileScript(
     outputDir: File,
     script: File,
     additionalSources: List<File> = emptyList(),

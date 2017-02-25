@@ -1,11 +1,12 @@
 dependencies {
-    compile gradleApi()
+    compileOnly gradleApi()
     compile project(":scripting")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'
 
+    testCompile project(":aws")
     testCompile "junit:junit:4.12"
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }

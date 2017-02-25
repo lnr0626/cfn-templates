@@ -35,7 +35,6 @@ import org.jetbrains.kotlin.config.CommonConfigurationKeys
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.CompilerConfigurationKey
 import org.jetbrains.kotlin.config.JVMConfigurationKeys.OUTPUT_DIRECTORY
-import org.jetbrains.kotlin.config.JVMConfigurationKeys.OUTPUT_JAR
 import org.jetbrains.kotlin.config.JVMConfigurationKeys.RETAIN_OUTPUT_IN_MEMORY
 import org.jetbrains.kotlin.config.JVMConfigurationKeys.SCRIPT_DEFINITIONS
 import org.jetbrains.kotlin.config.addKotlinSourceRoots
@@ -71,16 +70,6 @@ fun compileKotlinScriptToDirectory(
     }
 }
 
-internal
-fun compileToJar(
-    outputJar: File,
-    sourceFiles: Iterable<File>,
-    messageCollector: MessageCollector,
-    classPath: Iterable<File> = emptyList()): Boolean =
-
-    compileTo(OUTPUT_JAR, outputJar, sourceFiles, messageCollector, classPath)
-
-internal
 fun compileToDirectory(
     outputDirectory: File,
     sourceFiles: Iterable<File>,
