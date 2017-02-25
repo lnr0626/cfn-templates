@@ -1,6 +1,6 @@
 dependencies {
     compileOnly gradleApi()
-    compile project(":scripting")
+    compile project(":base-models")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"

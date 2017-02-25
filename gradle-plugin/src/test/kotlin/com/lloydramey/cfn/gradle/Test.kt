@@ -33,8 +33,8 @@ class Test {
 
         val script = compileScript(
             File("build"),
-            File("../scripting/src/test/resources/test.template.kts"),
-            listOf(File("../scripting/src/test/resources/another.kt")),
+            File("src/test/resources/test.template.kts"),
+            listOf(File("src/test/resources/another.kt")),
             classpath,
             Test::class.java.classLoader,
             PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, false)
