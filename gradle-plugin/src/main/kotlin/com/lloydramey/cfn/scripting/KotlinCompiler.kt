@@ -43,8 +43,7 @@ import org.jetbrains.kotlin.utils.PathUtil
 import org.jetbrains.kotlin.utils.addToStdlib.singletonList
 import java.io.File
 
-internal
-fun compileKotlinScriptToDirectory(
+internal fun compileKotlinScriptToDirectory(
     outputDirectory: File,
     scriptFile: File,
     scriptDef: KotlinScriptDefinition,
@@ -70,7 +69,7 @@ fun compileKotlinScriptToDirectory(
     }
 }
 
-fun compileToDirectory(
+internal fun compileToDirectory(
     outputDirectory: File,
     sourceFiles: Iterable<File>,
     messageCollector: MessageCollector,
@@ -78,8 +77,7 @@ fun compileToDirectory(
 
     compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, messageCollector, classPath)
 
-private
-fun compileTo(
+private fun compileTo(
     outputConfigurationKey: CompilerConfigurationKey<File>,
     output: File,
     sourceFiles: Iterable<File>,
@@ -128,28 +126,23 @@ inline fun <T> withMessageCollector(messageCollector: MessageCollector, action: 
     }
 }
 
-private
-fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFile: File) =
+private fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFile: File) =
     compilerConfigurationFor(messageCollector, listOf(sourceFile))
 
-private
-fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFiles: Iterable<File>): CompilerConfiguration =
+private fun compilerConfigurationFor(messageCollector: MessageCollector, sourceFiles: Iterable<File>): CompilerConfiguration =
     CompilerConfiguration().apply {
         addKotlinSourceRoots(sourceFiles.map { it.canonicalPath })
         addJvmClasspathRoots(PathUtil.getJdkClassesRoots())
         put<MessageCollector>(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, messageCollector)
     }
 
-private
-fun CompilerConfiguration.setModuleName(name: String) {
+private fun CompilerConfiguration.setModuleName(name: String) {
     put(CommonConfigurationKeys.MODULE_NAME, name)
 }
 
-private
-fun CompilerConfiguration.addScriptDefinition(scriptDef: KotlinScriptDefinition) {
+private fun CompilerConfiguration.addScriptDefinition(scriptDef: KotlinScriptDefinition) {
     add(SCRIPT_DEFINITIONS, scriptDef)
 }
 
-private
-fun kotlinCoreEnvironmentFor(configuration: CompilerConfiguration, rootDisposable: Disposable) =
+private fun kotlinCoreEnvironmentFor(configuration: CompilerConfiguration, rootDisposable: Disposable) =
     KotlinCoreEnvironment.createForProduction(rootDisposable, configuration, EnvironmentConfigFiles.JVM_CONFIG_FILES)

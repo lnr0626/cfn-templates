@@ -34,22 +34,22 @@ import kotlin.reflect.full.primaryConstructor
     scriptFilePattern = ".*\\.template\\.kts"
 )
 abstract class CfnTemplateScript {
-    var description: String = ""
-    val metadata = mutableMapOf<String, Any>()
-    val parameters = mutableListOf<Parameter>()
-    val mappings = mutableListOf<Mapping>()
-    val conditions = mutableListOf<Condition>()
-    val resources = mutableListOf<Resource<ResourceProperties>>()
-    val outputs = mutableListOf<Output>()
+    protected var description: String = ""
+    internal val metadata = mutableMapOf<String, Any>()
+    internal val parameters = mutableListOf<Parameter>()
+    internal val mappings = mutableListOf<Mapping>()
+    internal val conditions = mutableListOf<Condition>()
+    protected val resources = mutableListOf<Resource<ResourceProperties>>()
+    internal val outputs = mutableListOf<Output>()
 
-    fun metadata(id: String, value: Any) {
+    protected fun metadata(id: String, value: Any) {
         if (id in metadata) {
             throw IllegalArgumentException("Duplicate id found for Metadata: $id")
         }
         metadata[id] = value
     }
 
-    fun mapping(id: String, init: MappingDefinition.() -> Unit): Mapping {
+    protected fun mapping(id: String, init: MappingDefinition.() -> Unit): Mapping {
         if (id in mappings.map { it.id }) {
             throw IllegalArgumentException("Duplicate Mapping id name $id")
         }
@@ -61,7 +61,7 @@ abstract class CfnTemplateScript {
         return mapping
     }
 
-    fun parameter(id: String, type: ParameterType, init: Parameter.() -> Unit): Parameter {
+    protected fun parameter(id: String, type: ParameterType, init: Parameter.() -> Unit): Parameter {
         if (id in parameters.map { it.id }) {
             throw IllegalArgumentException("Duplicate Parameter named $id")
         }
@@ -71,7 +71,7 @@ abstract class CfnTemplateScript {
         return param
     }
 
-    fun condition(id: String, func: ConditionFunction): Condition {
+    protected fun condition(id: String, func: ConditionFunction): Condition {
         if (id in conditions.map { it.id }) {
             throw IllegalArgumentException("Duplicate Condition named $id")
         }
@@ -80,7 +80,7 @@ abstract class CfnTemplateScript {
         return cond
     }
 
-    inline fun <reified T : ResourceProperties> resource(id: String, vararg attributes: ResourceDefinitionAttribute, init: T.() -> Unit): Resource<T> {
+    protected inline fun <reified T : ResourceProperties> resource(id: String, vararg attributes: ResourceDefinitionAttribute, init: T.() -> Unit): Resource<T> {
         if (id in resources.map { it.id }) {
             throw IllegalArgumentException("Duplicate Resource named $id")
         }
@@ -94,7 +94,7 @@ abstract class CfnTemplateScript {
         return res
     }
 
-    fun output(id: String, condition: ConditionalOn? = null, init: Output.() -> Unit): Output {
+    protected fun output(id: String, condition: ConditionalOn? = null, init: Output.() -> Unit): Output {
         if (id in outputs.map { it.id }) {
             throw IllegalArgumentException("Duplicate Output named $id")
         }
