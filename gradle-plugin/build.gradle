@@ -1,8 +1,6 @@
 dependencies {
     compile gradleApi()
-    compile localGroovy()
-    compile project(":aws")
-    compile project(":base-models")
+    compile project(":scripting")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"
