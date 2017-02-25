@@ -73,22 +73,25 @@ internal fun compileToDirectory(
     outputDirectory: File,
     sourceFiles: Iterable<File>,
     messageCollector: MessageCollector,
-    classPath: Iterable<File> = emptyList()): Boolean =
+    classPath: Iterable<File> = emptyList(),
+    vararg scriptDefs: KotlinScriptDefinition): Boolean =
 
-    compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, messageCollector, classPath)
+    compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, messageCollector, classPath, *scriptDefs)
 
 private fun compileTo(
     outputConfigurationKey: CompilerConfigurationKey<File>,
     output: File,
     sourceFiles: Iterable<File>,
     messageCollector: MessageCollector,
-    classPath: Iterable<File>): Boolean {
+    classPath: Iterable<File>,
+    vararg scriptDefs: KotlinScriptDefinition): Boolean {
 
     withRootDisposable { disposable ->
         withMessageCollector(messageCollector) { messageCollector ->
             val configuration = compilerConfigurationFor(messageCollector, sourceFiles).apply {
                 put(outputConfigurationKey, output)
                 setModuleName(output.nameWithoutExtension)
+                scriptDefs.forEach { addScriptDefinition(it) }
                 classPath.forEach { addJvmClasspathRoot(it) }
                 addJvmClasspathRoot(kotlinStdlibJar)
             }

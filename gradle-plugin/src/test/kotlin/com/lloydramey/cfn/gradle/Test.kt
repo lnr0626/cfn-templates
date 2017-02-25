@@ -18,12 +18,13 @@ package com.lloydramey.cfn.gradle
 import com.lloydramey.cfn.model.Template
 import com.lloydramey.cfn.model.aws.parameters.AwsParameters
 import com.lloydramey.cfn.scripting.CfnTemplateScript
-import com.lloydramey.cfn.scripting.compileScript
+import com.lloydramey.cfn.scripting.compileScriptToDirectory
 import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.utils.PathUtil
 import org.junit.Test
 import java.io.File
+import kotlin.test.assertTrue
 
 class Test {
     @Test
@@ -31,14 +32,16 @@ class Test {
 
         val classpath = (getClassPath() + PathUtil.getJdkClassesRoots())
 
-        val script = compileScript(
-            File("build"),
-            File("src/test/resources/test.template.kts"),
-            listOf(File("src/test/resources/another.kt")),
-            classpath,
-            Test::class.java.classLoader,
-            PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, false)
-        )
+        File("src/test/resources/").list()
+
+        assertTrue {
+            compileScriptToDirectory(
+                File("build/test-classes"),
+                File("src/test/resources/").listRecursively(),
+                PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, true),
+                classpath
+            )
+        }
 
     }
 
@@ -48,4 +51,8 @@ class Test {
         PathUtil.getResourcePathForClass(AwsParameters::class.java),
         PathUtil.getResourcePathForClass(CfnTemplateScript::class.java)
     ).distinct()
+
+    private fun File.listRecursively(): List<File> {
+        return listFiles().flatMap { if(it.isFile) listOf(it) else it.listRecursively() }
+    }
 }

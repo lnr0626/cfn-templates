@@ -1,3 +1,5 @@
+package template
+
 import com.lloydramey.cfn.model.aws.ApiGateway
 import com.lloydramey.cfn.model.parameters.Types.*
 import tests.*

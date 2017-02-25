@@ -25,8 +25,8 @@ import java.net.URLClassLoader
 import kotlin.reflect.KClass
 
 class KotlinScriptExternalDependenciesWithImports(
-    val implicitImports: List<String> = emptyList(),
-    val clazzpath: List<File> = emptyList()
+    val implicitImports: Iterable<String> = emptyList(),
+    val clazzpath: Iterable<File> = emptyList()
 ) : KotlinScriptExternalDependencies {
     override val imports: Iterable<String>
         get() = implicitImports
@@ -37,7 +37,7 @@ class KotlinScriptExternalDependenciesWithImports(
 
 internal fun scriptDefinitionFor(
     clazz: KClass<out Any> = CfnTemplateScript::class,
-    classpath: List<File> = emptyList()
+    classpath: Iterable<File> = emptyList()
 ) = object : KotlinScriptDefinition(clazz) {
     override fun <TF : Any> getDependenciesFor(
         file: TF,
@@ -45,6 +45,21 @@ internal fun scriptDefinitionFor(
         previousDependencies: KotlinScriptExternalDependencies?
     ): KotlinScriptExternalDependencies? =
         KotlinScriptExternalDependenciesWithImports(ImplicitImports.list, classpath)
+}
+
+internal fun compileScriptToDirectory(
+    outputDirectory: File,
+    sourceFiles: Iterable<File>,
+    messageCollector: MessageCollector,
+    classPath: Iterable<File> = emptyList()
+): Boolean {
+    return compileToDirectory(
+        outputDirectory,
+        sourceFiles,
+        messageCollector,
+        classPath,
+        scriptDefinitionFor(CfnTemplateScript::class, classPath)
+    )
 }
 
 internal fun compileScript(
@@ -67,4 +82,8 @@ internal fun compileScript(
         loader,
         messageCollector
     )
+}
+
+internal sealed class CompileResult {
+    data class Success(val scriptClass: Class<CfnTemplateScript>)
 }
