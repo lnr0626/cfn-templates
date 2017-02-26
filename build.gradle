@@ -15,9 +15,10 @@ plugins {
 }
 
 subprojects {
-    group 'com.lloydramey'
+    group 'com.lloydramey.cfn'
     version '0.0.1'
 
+    apply plugin: 'maven-publish'
     apply plugin: 'kotlin'
     apply plugin: 'com.github.hierynomus.license'
 
@@ -61,5 +62,15 @@ subprojects {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "-F", "src/**/*.kt"
+    }
+}
+
+configure(subprojects - project(':plugin')) {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
     }
 }

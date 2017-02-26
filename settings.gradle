@@ -2,4 +2,4 @@ rootProject.name = 'cfn'
 
 include ':aws'
 include ':base-models'
-include ':gradle-plugin'
+include ':plugin'

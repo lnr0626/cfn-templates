@@ -19,3 +19,5 @@ val EnvType = parameter("EnvType", Str) {
     allowedValues = listOf("prod", "test")
     constraintDescription = "must specify prod or test."
 }
+
+val test = Test_template()

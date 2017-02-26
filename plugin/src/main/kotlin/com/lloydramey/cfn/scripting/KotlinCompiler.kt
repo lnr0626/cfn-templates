@@ -74,9 +74,10 @@ internal fun compileToDirectory(
     sourceFiles: Iterable<File>,
     messageCollector: MessageCollector,
     classPath: Iterable<File> = emptyList(),
-    vararg scriptDefs: KotlinScriptDefinition): Boolean =
+    vararg scriptDefs: KotlinScriptDefinition): Boolean {
 
-    compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, messageCollector, classPath, *scriptDefs)
+    return compileTo(OUTPUT_DIRECTORY, outputDirectory, sourceFiles, messageCollector, classPath, *scriptDefs)
+}
 
 private fun compileTo(
     outputConfigurationKey: CompilerConfigurationKey<File>,

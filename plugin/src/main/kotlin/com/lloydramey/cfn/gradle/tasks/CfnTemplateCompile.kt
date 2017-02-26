@@ -16,6 +16,7 @@
 package com.lloydramey.cfn.gradle.tasks
 
 import com.lloydramey.cfn.scripting.compileScriptToDirectory
+import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
 import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
@@ -37,12 +38,16 @@ class CfnTemplateCompile(var verbose: Boolean = false) : AbstractCompile() {
         destinationDir.deleteRecursively()
         val files = getSource().files
 
-        compileScriptToDirectory(
+        val success = compileScriptToDirectory(
             destinationDir,
             files,
             PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, verbose),
             classpath.files
         )
+
+        if (!success) {
+            throw GradleException("Compilation failed, see log for details")
+        }
     }
 
     private fun isCfnTemplateScript(it: File) = it.name.matches(Regex(".*\\.template\\.kts"))

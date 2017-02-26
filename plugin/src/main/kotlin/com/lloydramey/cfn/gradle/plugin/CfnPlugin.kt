@@ -15,3 +15,12 @@
  */
 package com.lloydramey.cfn.gradle.plugin
 
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+class CfnPlugin : Plugin<Project> {
+    override fun apply(p: Project) {
+
+    }
+
+}
