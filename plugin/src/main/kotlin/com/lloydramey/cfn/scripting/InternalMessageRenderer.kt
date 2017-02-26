@@ -16,8 +16,6 @@
 
 package com.lloydramey.cfn.scripting
 
-import com.lloydramey.cfn.gradle.internal.InternalMessageRenderer
-import com.lloydramey.cfn.gradle.internal.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.com.intellij.util.LineSeparator
