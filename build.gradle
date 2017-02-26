@@ -25,6 +25,7 @@ subprojects {
     license {
         header rootProject.file("APACHE_HEADER")
         mapping 'kt', 'SLASHSTAR_STYLE'
+        mapping 'kts', 'SLASHSTAR_STYLE'
         mapping 'java', 'SLASHSTAR_STYLE'
         strictCheck true
         skipExistingHeaders true
