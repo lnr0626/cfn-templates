@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.com.intellij.util.LineSeparator
 
-internal val withFullPaths = object : InternalMessageRenderer() {
+internal val withFullPaths = object : InternalPlainTextMessageRenderer() {
     override fun getPath(location: CompilerMessageLocation): String? {
         return location.path
     }
@@ -32,42 +32,29 @@ interface MessageRenderer {
     ): String
 }
 
-internal abstract class InternalMessageRenderer : MessageRenderer {
+internal abstract class InternalPlainTextMessageRenderer : MessageRenderer {
     override fun render(
         severity: CompilerMessageSeverity, message: String, location: CompilerMessageLocation
     ): String {
-        val result = StringBuilder()
-
         val line = location.line
         val column = location.column
         val lineContent = location.lineContent
 
-        val path = getPath(location)
-        if (path != null) {
-            result.append(path)
-            result.append(":")
-            if (line > 0) {
-                result.append(line).append(":")
-                if (column > 0) {
-                    result.append(column).append(":")
-                }
-            }
-            result.append(" ")
+        val path = if(line > 0) {
+            getPath(location)?.let { path -> "$path:$line: " } ?: ""
+        } else {
+            getPath(location) ?: ""
         }
 
-        result.append(severity.presentableName)
-        result.append(": ")
-        result.append(decapitalizeIfNeeded(message))
-
-        if (lineContent != null && 1 <= column && column <= lineContent.length + 1) {
-            result.append(LINE_SEPARATOR)
-            result.append(lineContent)
-            result.append(LINE_SEPARATOR)
-            result.append(" ".repeat(column - 1))
-            result.append("^")
+        val result = if(lineContent != null && column >= 1 && column <= lineContent.length + 1) {
+            """$path${severity.presentableName}: ${decapitalizeIfNeeded(message)}
+              |$lineContent
+              |${" ".repeat(column - 1)}^""".trimMargin("|")
+        } else {
+            "$path: ${severity.presentableName}: ${decapitalizeIfNeeded(message)}"
         }
 
-        return result.toString()
+        return result
     }
 
     protected abstract fun getPath(location: CompilerMessageLocation): String?
@@ -87,6 +74,3 @@ internal abstract class InternalMessageRenderer : MessageRenderer {
         return message.decapitalize()
     }
 }
-
-private val LINE_SEPARATOR = LineSeparator.getSystemLineSeparator().separatorString
-
