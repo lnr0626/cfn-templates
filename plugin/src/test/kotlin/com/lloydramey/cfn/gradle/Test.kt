@@ -18,7 +18,7 @@ package com.lloydramey.cfn.gradle
 import com.lloydramey.cfn.model.Template
 import com.lloydramey.cfn.model.aws.parameters.AwsParameters
 import com.lloydramey.cfn.scripting.CfnTemplateScript
-import com.lloydramey.cfn.scripting.GradleLoggerMessageCollection
+import com.lloydramey.cfn.scripting.Slf4jMessageCollection
 import com.lloydramey.cfn.scripting.compileScriptToDirectory
 import com.lloydramey.cfn.scripting.withFullPaths
 import org.jetbrains.kotlin.utils.PathUtil
@@ -38,7 +38,7 @@ class Test {
             compileScriptToDirectory(
                 File("build/test-classes"),
                 File("src/test/resources/").listRecursively(),
-                GradleLoggerMessageCollection(LoggerFactory.getLogger(Test::class.java), withFullPaths),
+                Slf4jMessageCollection(LoggerFactory.getLogger(Test::class.java), withFullPaths),
                 classpath
             )
         }
