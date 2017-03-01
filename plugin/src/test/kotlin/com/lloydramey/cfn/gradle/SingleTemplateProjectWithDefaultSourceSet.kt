@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.gradle.tasks
+package com.lloydramey.cfn.gradle
 
 import com.lloydramey.cfn.gradle.FolderBasedTest
 import org.gradle.testkit.runner.GradleRunner
@@ -26,6 +26,11 @@ class SingleTemplateProjectWithDefaultSourceSet(val version: String) : FolderBas
         withFolders {
             "root" {
                 withFile("build.gradle", """
+buildscript {
+    dependencies {
+        classpath files($classpathString)
+    }
+}
 apply plugin: 'com.lloydramey.cfn'
 """)
                 "src" {

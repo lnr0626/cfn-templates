@@ -27,6 +27,17 @@ abstract class MultiVersionGradleTest {
         @JvmStatic
         @Parameterized.Parameters(name="{index}: Using Gradle v{0}")
         fun gradleVersions() = listOf("3.0", "3.1", "3.2", "3.3", "3.4")
+
+        val classpath: List<File> by lazy {
+            val pluginClasspathResource = MultiVersionGradleTest::class.java.classLoader.getResource("plugin-classpath.txt") ?: throw IllegalStateException("Did not find plugin classpath resource, run `testClasses` build task.")
+
+            pluginClasspathResource.readText().split("\n").map(::File)
+        }
+        val classpathString: String by lazy {
+            classpath.map { "'${escape(it.absolutePath)}'" }.joinToString(", ")
+        }
+
+        private fun escape(str: String) = str.replace("\\", "\\\\")
     }
 }
 
