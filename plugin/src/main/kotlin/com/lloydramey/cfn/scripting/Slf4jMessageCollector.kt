@@ -1,4 +1,4 @@
-package com.lloydramey.cfn.scripting;
+package com.lloydramey.cfn.scripting
 
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity.WARNING
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.slf4j.Logger
 
-class Slf4jMessageCollection(val logger: Logger, val messageRenderer: MessageRenderer) : MessageCollector {
+class Slf4jMessageCollector(val logger: Logger, val messageRenderer: MessageRenderer) : MessageCollector {
     private var hasErrors: Boolean = false
 
     override fun clear() {

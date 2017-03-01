@@ -15,7 +15,7 @@
  */
 package com.lloydramey.cfn.gradle.tasks
 
-import com.lloydramey.cfn.scripting.Slf4jMessageCollection
+import com.lloydramey.cfn.scripting.Slf4jMessageCollector
 import com.lloydramey.cfn.scripting.compileScriptToDirectory
 import com.lloydramey.cfn.scripting.withFullPaths
 import org.gradle.api.GradleException
@@ -41,7 +41,7 @@ class CfnTemplateCompile : AbstractCompile() {
         val success = compileScriptToDirectory(
             destinationDir,
             files,
-            Slf4jMessageCollection(logger, withFullPaths),
+            Slf4jMessageCollector(logger, withFullPaths),
             classpath.files
         )
 

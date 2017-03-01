@@ -18,7 +18,6 @@ package com.lloydramey.cfn.scripting
 
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
-import org.jetbrains.kotlin.com.intellij.util.LineSeparator
 
 internal val withFullPaths = object : InternalPlainTextMessageRenderer() {
     override fun getPath(location: CompilerMessageLocation): String? {
@@ -40,13 +39,13 @@ internal abstract class InternalPlainTextMessageRenderer : MessageRenderer {
         val column = location.column
         val lineContent = location.lineContent
 
-        val path = if(line > 0) {
+        val path = if (line > 0) {
             getPath(location)?.let { path -> "$path:$line: " } ?: ""
         } else {
             getPath(location) ?: ""
         }
 
-        val result = if(lineContent != null && column >= 1 && column <= lineContent.length + 1) {
+        val result = if (lineContent != null && column >= 1 && column <= lineContent.length + 1) {
             """$path${severity.presentableName}: ${decapitalizeIfNeeded(message)}
               |$lineContent
               |${" ".repeat(column - 1)}^""".trimMargin("|")

@@ -18,7 +18,7 @@ package com.lloydramey.cfn.gradle
 import com.lloydramey.cfn.model.Template
 import com.lloydramey.cfn.model.aws.parameters.AwsParameters
 import com.lloydramey.cfn.scripting.CfnTemplateScript
-import com.lloydramey.cfn.scripting.Slf4jMessageCollection
+import com.lloydramey.cfn.scripting.Slf4jMessageCollector
 import com.lloydramey.cfn.scripting.compileScriptToDirectory
 import com.lloydramey.cfn.scripting.withFullPaths
 import org.jetbrains.kotlin.utils.PathUtil
@@ -26,7 +26,6 @@ import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.io.File
 import kotlin.test.assertTrue
-
 
 class Test {
     @Test
@@ -38,7 +37,7 @@ class Test {
             compileScriptToDirectory(
                 File("build/test-classes"),
                 File("src/test/resources/").listRecursively(),
-                Slf4jMessageCollection(LoggerFactory.getLogger(Test::class.java), withFullPaths),
+                Slf4jMessageCollector(LoggerFactory.getLogger(Test::class.java), withFullPaths),
                 classpath
             )
         }

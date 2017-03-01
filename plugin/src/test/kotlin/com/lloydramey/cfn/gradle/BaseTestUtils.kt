@@ -1,6 +1,5 @@
 package com.lloydramey.cfn.gradle
 
-import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith

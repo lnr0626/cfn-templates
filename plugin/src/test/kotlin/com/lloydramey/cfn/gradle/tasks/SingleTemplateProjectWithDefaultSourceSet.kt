@@ -2,11 +2,12 @@ package com.lloydramey.cfn.gradle.tasks
 
 import com.lloydramey.cfn.gradle.FolderBasedTest
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Before
 import org.junit.Test
 
-class CfnTemplateCompileTest(val version: String) : FolderBasedTest() {
-    @Test
-    fun `project with single template file`() {
+class SingleTemplateProjectWithDefaultSourceSet(val version: String) : FolderBasedTest() {
+    @Before
+    fun setup() {
         withFolders {
             "root" {
                 withFile("build.gradle", """
@@ -34,13 +35,19 @@ resource<ApiGateway.Account>("Account") {
                 }
             }
         }
+    }
 
-        val buildResult = GradleRunner.create()
+    @Test
+    fun `project is evaluated and configured correctly`() {
+        evaluateProjectWithArguments()
+    }
+
+    private fun evaluateProjectWithArguments(vararg args: String) {
+        GradleRunner.create()
             .withProjectDir(folder("root"))
             .withPluginClasspath()
+            .withArguments(*args)
             .withGradleVersion(version)
             .build()
-
-        println(buildResult.output)
     }
 }
