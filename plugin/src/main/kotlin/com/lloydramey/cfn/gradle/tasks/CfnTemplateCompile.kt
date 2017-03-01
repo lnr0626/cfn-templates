@@ -15,20 +15,19 @@
  */
 package com.lloydramey.cfn.gradle.tasks
 
+import com.lloydramey.cfn.scripting.Slf4jMessageCollection
 import com.lloydramey.cfn.scripting.compileScriptToDirectory
+import com.lloydramey.cfn.scripting.withFullPaths
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
-import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
-import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
-import java.io.File
 
 /**
  * First MVI(?) for the compiler is to have a valid cfn template output into the build directory
  *
  * Second goal will be to output a jar containing resources that can be published
  */
-class CfnTemplateCompile(var verbose: Boolean = false) : AbstractCompile() {
+class CfnTemplateCompile : AbstractCompile() {
     override fun compile() {
         assert(false, { "Unexpected call to compile -> should be calling compileIncremental" })
     }
@@ -36,12 +35,13 @@ class CfnTemplateCompile(var verbose: Boolean = false) : AbstractCompile() {
     @TaskAction
     fun runCompiler() {
         destinationDir.deleteRecursively()
+
         val files = getSource().files
 
         val success = compileScriptToDirectory(
             destinationDir,
             files,
-            PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, verbose),
+            Slf4jMessageCollection(logger, withFullPaths),
             classpath.files
         )
 
@@ -49,7 +49,5 @@ class CfnTemplateCompile(var verbose: Boolean = false) : AbstractCompile() {
             throw GradleException("Compilation failed, see log for details")
         }
     }
-
-    private fun isCfnTemplateScript(it: File) = it.name.matches(Regex(".*\\.template\\.kts"))
 
 }
