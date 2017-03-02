@@ -61,5 +61,8 @@ subprojects {
             classpath = configurations["ktlint"]
             args("-F", "src/**/*.kt")
         }
+
+        getByName("check").dependsOn(ktlint)
     }
+
 }
