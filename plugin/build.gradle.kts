@@ -21,7 +21,7 @@ plugins {
 }
 
 apply {
-    plugin("kotlin-allopen")
+    plugin<AllOpenGradleSubplugin>()
 }
 
 configure<GradlePluginDevelopmentExtension> {
