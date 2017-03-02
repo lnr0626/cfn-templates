@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lloydramey.cfn.gradle
+package com.lloydramey.cfn.scripting
 
 import com.lloydramey.cfn.model.Template
 import com.lloydramey.cfn.model.aws.parameters.AwsParameters
-import com.lloydramey.cfn.scripting.CfnTemplateScript
-import com.lloydramey.cfn.scripting.Slf4jMessageCollector
-import com.lloydramey.cfn.scripting.compileScriptToDirectory
-import com.lloydramey.cfn.scripting.withFullPaths
 import org.jetbrains.kotlin.utils.PathUtil
 import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.io.File
 import kotlin.test.assertTrue
 
-class Test {
+class ScriptCompilerTests {
     @Test
-    fun thingsWork() {
+    fun `script compiler successfully compiles source`() {
 
         val classpath = (getClassPath() + PathUtil.getJdkClassesRoots())
 
