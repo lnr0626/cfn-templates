@@ -33,7 +33,9 @@ configure<GradlePluginDevelopmentExtension> {
     }
 }
 
-(extensions["allOpen"] as AllOpenExtension).annotation("com.lloydramey.cfn.gradle.internal.OpenForGradle")
+configure<AllOpenExtension> {
+    annotation("com.lloydramey.cfn.gradle.internal.OpenForGradle")
+}
 
 dependencies {
     compile(gradleApi())
