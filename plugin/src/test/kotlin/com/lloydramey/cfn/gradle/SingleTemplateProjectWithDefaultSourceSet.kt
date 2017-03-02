@@ -16,6 +16,8 @@
 package com.lloydramey.cfn.gradle
 
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.Before
 import org.junit.Test
 
@@ -62,9 +64,10 @@ resource<ApiGateway.Account>("Account") {
     }
 
     @Test
-    fun `compile cloudify generates`() {
+    fun `compile cloudify executes successfully`() {
         val result = evaluateProjectWithArguments("compileCloudify").build()
-        println(result.tasks)
+        val task = result.task(":compileCloudify")
+        assert(task.outcome == SUCCESS)
     }
 
     private fun evaluateProjectWithArguments(vararg args: String) = GradleRunner.create()
