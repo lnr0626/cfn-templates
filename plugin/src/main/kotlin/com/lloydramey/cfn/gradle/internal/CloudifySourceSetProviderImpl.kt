@@ -18,6 +18,7 @@ package com.lloydramey.cfn.gradle.internal
 import com.lloydramey.cfn.gradle.plugin.CloudifySourceSet
 import com.lloydramey.cfn.gradle.plugin.CloudifySourceSetProvider
 import groovy.lang.Closure
+import org.gradle.api.Action
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.file.DefaultSourceDirectorySet
 import org.gradle.api.internal.file.FileResolver
@@ -31,14 +32,24 @@ internal class CloudifySourceSetProviderImpl constructor(private val fileResolve
 
 private class CloudifySourceSetImpl(displayName: String, resolver: FileResolver) : CloudifySourceSet {
     override val cloudify: SourceDirectorySet =
-        createDefaultSourceDirectorySet(displayName + " Kotlin source", resolver)
+        createDefaultSourceDirectorySet(displayName + " Cloud Formation Template source", resolver)
+
+    override val allCloudify: SourceDirectorySet =
+        createDefaultSourceDirectorySet(displayName + " Cloud Formation Template source", resolver)
 
     init {
         cloudify.filter?.include("**/*.kt", "**/*.template.kts")
+        allCloudify.source(cloudify)
+        allCloudify.filter?.include("**/*.template.kts")
     }
 
-    override fun kotlin(configureClosure: Closure<Any?>?): CloudifySourceSet {
+    override fun cloudify(configureClosure: Closure<Any?>?): CloudifySourceSet {
         ConfigureUtil.configure(configureClosure, cloudify)
+        return this
+    }
+
+    override fun cloudify(configureAction: Action<SourceDirectorySet>?): CloudifySourceSet {
+        configureAction?.execute(this.cloudify)
         return this
     }
 }

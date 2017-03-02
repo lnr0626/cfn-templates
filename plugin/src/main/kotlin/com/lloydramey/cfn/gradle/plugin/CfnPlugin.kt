@@ -15,12 +15,46 @@
  */
 package com.lloydramey.cfn.gradle.plugin
 
+import com.lloydramey.cfn.gradle.internal.*
+import com.lloydramey.cfn.gradle.tasks.CfnTemplateCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.file.FileResolver
+import org.gradle.api.internal.tasks.DefaultSourceSet
+import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPluginConvention
+import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import javax.inject.Inject
 
-class CfnPlugin : Plugin<Project> {
+@OpenForGradle
+class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Project> {
     override fun apply(p: Project) {
+        p.pluginManager.apply(JavaPlugin::class)
+        p.pluginManager.apply(KotlinPluginWrapper::class)
 
+        val provider = CloudifySourceSetProviderImpl(fileResolver)
+        val java = p.convention.getPlugin(JavaPluginConvention::class)
+
+        configureSourceSetDefaults(p, java, provider)
     }
 
+    private fun configureSourceSetDefaults(p: Project, java: JavaPluginConvention, provider: CloudifySourceSetProvider) {
+        java.sourceSets?.all { sourceSet ->
+            val cfnSourceSet = provider.create((sourceSet as DefaultSourceSet).displayName)
+
+            sourceSet.addConvention("cloudify", cfnSourceSet)
+            sourceSet.resources.filter?.exclude {
+                cfnSourceSet.cloudify.contains(it.file)
+            }
+            sourceSet.allSource.source(cfnSourceSet.cloudify)
+
+            val compileTaskName = sourceSet.getCompileTaskName("cloudify")
+            val compile = p.tasks.create(compileTaskName, CfnTemplateCompile::class.java)
+
+            compile.description = "Compile the ${sourceSet.name} Cloudify source."
+            compile.setSource(cfnSourceSet.cloudify)
+
+            p.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
+        }
+    }
 }

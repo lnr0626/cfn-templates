@@ -15,24 +15,25 @@
  */
 package com.lloydramey.cfn.gradle
 
+import org.gradle.testkit.runner.internal.PluginUnderTestMetadataReading
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import java.io.File
+import java.util.Properties
 
 @RunWith(Parameterized::class)
 abstract class MultiVersionGradleTest {
     companion object {
         @JvmStatic
-        @Parameterized.Parameters(name="{index}: Using Gradle v{0}")
-        fun gradleVersions() = listOf("3.0", "3.1", "3.2", "3.3", "3.4")
+        @Parameterized.Parameters(name = "{index}: Using Gradle v{0}")
+        fun gradleVersions() = listOf("3.0")
 
         val classpath: List<File> by lazy {
-            val pluginClasspathResource = MultiVersionGradleTest::class.java.classLoader.getResource("plugin-classpath.txt") ?: throw IllegalStateException("Did not find plugin classpath resource, run `testClasses` build task.")
-
-            pluginClasspathResource.readText().split("\n").map(::File)
+            PluginUnderTestMetadataReading.readImplementationClasspath()
         }
+
         val classpathString: String by lazy {
             classpath.map { "'${escape(it.absolutePath)}'" }.joinToString(", ")
         }

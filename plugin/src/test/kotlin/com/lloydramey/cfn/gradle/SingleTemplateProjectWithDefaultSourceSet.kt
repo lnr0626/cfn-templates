@@ -15,7 +15,6 @@
  */
 package com.lloydramey.cfn.gradle
 
-import com.lloydramey.cfn.gradle.FolderBasedTest
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Before
 import org.junit.Test
@@ -35,7 +34,7 @@ apply plugin: 'com.lloydramey.cfn'
 """)
                 "src" {
                     "main" {
-                        "cfn" {
+                        "cloudify" {
                             withFile("Account.template.kts", """
 import com.lloydramey.cfn.model.aws.ApiGateway
 import com.lloydramey.cfn.model.parameters.Types.*
@@ -59,15 +58,18 @@ resource<ApiGateway.Account>("Account") {
 
     @Test
     fun `project is evaluated and configured correctly`() {
-        evaluateProjectWithArguments()
+        evaluateProjectWithArguments().build()
     }
 
-    private fun evaluateProjectWithArguments(vararg args: String) {
-        GradleRunner.create()
-            .withProjectDir(folder("root"))
-            .withPluginClasspath()
-            .withArguments(*args)
-            .withGradleVersion(version)
-            .build()
+    @Test
+    fun `compile cloudify generates`() {
+        val result = evaluateProjectWithArguments("compileCloudify").build()
+        println(result.tasks)
     }
+
+    private fun evaluateProjectWithArguments(vararg args: String) = GradleRunner.create()
+        .withProjectDir(folder("root"))
+        .withPluginClasspath()
+        .withArguments(*args, "--stacktrace")
+        .withGradleVersion(version)
 }

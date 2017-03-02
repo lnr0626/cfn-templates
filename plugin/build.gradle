@@ -1,5 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+    }
+}
+
 plugins {
     id "java-gradle-plugin"
+}
+apply plugin: "kotlin-allopen"
+
+allOpen {
+    annotation("com.lloydramey.cfn.gradle.internal.OpenForGradle")
 }
 
 gradlePlugin {
@@ -10,18 +24,6 @@ gradlePlugin {
         }
     }
 }
-// Write the plugin's classpath to a file to share with the tests
-task createClasspathManifest {
-    def outputDir = file("$buildDir/$name")
-
-    inputs.files sourceSets.main.runtimeClasspath
-    outputs.dir outputDir
-
-    doLast {
-        outputDir.mkdirs()
-        file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
-    }
-}
 
 dependencies {
     compile gradleApi()
@@ -29,14 +31,13 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'
 
     testCompile project(":aws")
     testCompile gradleTestKit()
     testCompile "junit:junit:4.12"
     testCompile 'org.hamcrest:hamcrest-library:1.3'
-
-    testRuntime files(createClasspathManifest)
 }
 
 task copyLibs(type: Copy) {

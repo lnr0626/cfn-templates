@@ -15,6 +15,7 @@
  */
 package com.lloydramey.cfn.gradle.tasks
 
+import com.lloydramey.cfn.gradle.internal.OpenForGradle
 import com.lloydramey.cfn.scripting.Slf4jMessageCollector
 import com.lloydramey.cfn.scripting.compileScriptToDirectory
 import com.lloydramey.cfn.scripting.withFullPaths
@@ -27,6 +28,7 @@ import org.gradle.api.tasks.compile.AbstractCompile
  *
  * Second goal will be to output a jar containing resources that can be published
  */
+@OpenForGradle
 class CfnTemplateCompile : AbstractCompile() {
     override fun compile() {
         assert(false, { "Unexpected call to compile -> should be calling compileIncremental" })
