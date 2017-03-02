@@ -21,7 +21,6 @@ import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import java.io.File
-import java.util.Properties
 
 @RunWith(Parameterized::class)
 abstract class MultiVersionGradleTest {

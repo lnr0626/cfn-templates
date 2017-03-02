@@ -15,7 +15,12 @@
  */
 package com.lloydramey.cfn.gradle.plugin
 
-import com.lloydramey.cfn.gradle.internal.*
+import com.lloydramey.cfn.gradle.internal.CloudifySourceSetProviderImpl
+import com.lloydramey.cfn.gradle.internal.OpenForGradle
+import com.lloydramey.cfn.gradle.internal.addConvention
+import com.lloydramey.cfn.gradle.internal.apply
+import com.lloydramey.cfn.gradle.internal.getPlugin
+import com.lloydramey.cfn.gradle.internal.mapClasspath
 import com.lloydramey.cfn.gradle.tasks.CfnTemplateCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -41,11 +46,10 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
     private fun configureSourceSetDefaults(p: Project, java: JavaPluginConvention, provider: CloudifySourceSetProvider) {
         java.sourceSets?.all { sourceSet ->
             val cfnSourceSet = provider.create((sourceSet as DefaultSourceSet).displayName)
+            cfnSourceSet.cloudify.srcDir("src/${sourceSet.name}/cloudify")
 
             sourceSet.addConvention("cloudify", cfnSourceSet)
-            sourceSet.resources.filter?.exclude {
-                cfnSourceSet.cloudify.contains(it.file)
-            }
+            sourceSet.resources.filter?.exclude { it.file in cfnSourceSet.cloudify }
             sourceSet.allSource.source(cfnSourceSet.cloudify)
 
             val compileTaskName = sourceSet.getCompileTaskName("cloudify")
@@ -53,6 +57,8 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
 
             compile.description = "Compile the ${sourceSet.name} Cloudify source."
             compile.setSource(cfnSourceSet.cloudify)
+            compile.destinationDir = sourceSet.output.classesDir
+            compile.mapClasspath { sourceSet.compileClasspath }
 
             p.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
         }

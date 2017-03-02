@@ -16,12 +16,11 @@
 package com.lloydramey.cfn.gradle
 
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.Before
 import org.junit.Test
 
-class SingleTemplateProjectWithDefaultSourceSet(val version: String) : FolderBasedTest() {
+class SingleTemplateProjectWithDefaultSourceSetTest(val version: String) : FolderBasedTest() {
     @Before
     fun setup() {
         withFolders {
@@ -33,12 +32,15 @@ buildscript {
     }
 }
 apply plugin: 'com.lloydramey.cfn'
+
+dependencies {
+    compile files($classpathString)
+}
 """)
                 "src" {
                     "main" {
                         "cloudify" {
                             withFile("Account.template.kts", """
-import com.lloydramey.cfn.model.aws.ApiGateway
 import com.lloydramey.cfn.model.parameters.Types.*
 import com.lloydramey.cfn.model.functions.*
 
@@ -47,9 +49,6 @@ val CloudWatchArn = parameter("CloudWatchArn", Str) {
     default = "test"
 }
 
-resource<ApiGateway.Account>("Account") {
-    cloudWatchArn = Ref(EnvType)
-}
 """)
                         }
                     }
@@ -67,6 +66,9 @@ resource<ApiGateway.Account>("Account") {
     fun `compile cloudify executes successfully`() {
         val result = evaluateProjectWithArguments("compileCloudify").build()
         val task = result.task(":compileCloudify")
+
+        println(result.output)
+
         assert(task.outcome == SUCCESS)
     }
 
