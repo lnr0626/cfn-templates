@@ -26,9 +26,14 @@ import com.lloydramey.cfn.model.resources.Resource
 import com.lloydramey.cfn.model.resources.ResourceProperties
 import com.lloydramey.cfn.model.resources.attributes.ConditionalOn
 import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
+import com.lloydramey.cfn.scripting.helpers.ConditionDelegate
+import com.lloydramey.cfn.scripting.helpers.MappingDefinition
+import com.lloydramey.cfn.scripting.helpers.MappingDelegate
 import com.lloydramey.cfn.scripting.helpers.MetadataDelegate
+import com.lloydramey.cfn.scripting.helpers.ParameterDefinition
+import com.lloydramey.cfn.scripting.helpers.ParameterDelegate
+import com.lloydramey.cfn.scripting.helpers.ResourceDelegate
 import com.lloydramey.cfn.scripting.helpers.TemplateMetadata
-import com.lloydramey.cfn.scripting.helpers.TemplateMetadataImpl
 import org.jetbrains.kotlin.script.ScriptTemplateDefinition
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubtypeOf
@@ -36,62 +41,32 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
+@Suppress("unused")
 @ScriptTemplateDefinition(
     scriptFilePattern = ".*\\.template\\.kts"
 )
 abstract class CfnTemplateScript {
     protected var description: String = ""
-    internal val parameters = mutableListOf<Parameter>()
-    internal val mappings = mutableListOf<Mapping>()
-    internal val conditions = mutableListOf<Condition>()
-    protected val resources = mutableListOf<Resource<ResourceProperties>>()
     internal val outputs = mutableListOf<Output>()
 
     protected fun metadata(value: Any) = MetadataDelegate(value)
 
-    protected fun mapping(id: String, init: MappingDefinition.() -> Unit): Mapping {
-        if (id in mappings.map { it.id }) {
-            throw IllegalArgumentException("Duplicate Mapping id name $id")
-        }
+    protected fun mapping(init: MappingDefinition.() -> Unit) = MappingDelegate(init)
 
-        val def = MappingDefinition(id)
-        def.init()
-        val mapping = def.toMapping()
-        mappings.add(mapping)
-        return mapping
-    }
+    protected fun parameter(type: ParameterType, init: ParameterDefinition.() -> Unit) = ParameterDelegate(type, init)
 
-    protected fun parameter(id: String, type: ParameterType, init: Parameter.() -> Unit): Parameter {
-        if (id in parameters.map { it.id }) {
-            throw IllegalArgumentException("Duplicate Parameter named $id")
-        }
-        val param = Parameter(id, type)
-        param.init()
-        parameters.add(param)
-        return param
-    }
+    protected fun condition(func: () -> ConditionFunction) = ConditionDelegate(func)
 
-    protected fun condition(id: String, func: ConditionFunction): Condition {
-        if (id in conditions.map { it.id }) {
-            throw IllegalArgumentException("Duplicate Condition named $id")
-        }
-        val cond = Condition(id, func)
-        conditions.add(cond)
-        return cond
-    }
-
-    protected inline fun <reified T : ResourceProperties> resource(id: String, vararg attributes: ResourceDefinitionAttribute, init: T.() -> Unit): Resource<T> {
-        if (id in resources.map { it.id }) {
-            throw IllegalArgumentException("Duplicate Resource named $id")
-        }
+    protected inline fun <reified T : ResourceProperties> resource(
+        vararg attributes: ResourceDefinitionAttribute,
+        init: T.() -> Unit
+    ): ResourceDelegate<T> {
         val clazz = T::class
         requireDefaultNoArgConstructor(clazz)
         val properties = clazz.primaryConstructor!!.call()
         properties.init()
         properties.validate()
-        val res = Resource(id = id, attributes = attributes.asList(), properties = properties)
-        resources.add(res)
-        return res
+        return ResourceDelegate(properties, attributes.asList())
     }
 
     protected fun output(id: String, condition: ConditionalOn? = null, init: Output.() -> Unit): Output {
@@ -111,35 +86,35 @@ abstract class CfnTemplateScript {
 
     internal fun toTemplate() = Template(
         description = description,
-        parameters = parameters.associateBy { it.id },
+        parameters = parameters,
         metadata = metadata,
-        mappings = mappings.associateBy { it.id },
-        conditions = conditions.associate { it.id to it.condition },
-        resources = resources.associateBy { it.id },
+        mappings = mappings,
+        conditions = conditions,
+        resources = resources,
         outputs = outputs.associateBy { it.id }
     )
 
+    private val resources: Map<String, Resource<ResourceProperties>>
+        get() = getPropertiesOfAType<Resource<ResourceProperties>>().associateBy { it.id }
+
+    private val conditions: Map<String, ConditionFunction>
+        get() = getPropertiesOfAType<Condition>().associate { it.id to it.condition }
+
+    private val parameters: Map<String, Parameter>
+        get() = getPropertiesOfAType<Parameter>().associateBy { it.id }
+
     private val metadata: Map<String, Any>
-        get() {
-            val script = this
-            return script::class.memberProperties
-                .filter { it.returnType.isSubtypeOf(TemplateMetadata::class.starProjectedType) }
-                .map { it.call(script) as TemplateMetadataImpl }
-                .associate { it.name to it.value }
-        }
-}
+        get() = getPropertiesOfAType<TemplateMetadata>()
+            .associate { it.name to it.value }
 
-class MappingDefinition(internal val id: String) {
-    internal val mappings = mutableMapOf<String, Map<String, String>>()
-    fun key(key: String, vararg values: Pair<String, String>) {
-        if (key in mappings) {
-            throw IllegalArgumentException("Duplicate Key ($key) found for mapping $id")
-        }
+    private val mappings: Map<String, Mapping>
+        get() = getPropertiesOfAType<Mapping>().associateBy { it.id }
 
-        mappings[key] = values.toMap()
+    private inline fun <reified T : Any> getPropertiesOfAType(): List<T> {
+        return this::class.memberProperties
+            .filter { it.returnType.isSubtypeOf(T::class.starProjectedType) }
+            .flatMap { listOf(it.call(this) as T?).filterNotNull() }
     }
-
-    internal fun toMapping() = Mapping(id, mappings)
 }
 
 fun requireDefaultNoArgConstructor(clazz: KClass<out ResourceProperties>) {

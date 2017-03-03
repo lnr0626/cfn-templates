@@ -28,7 +28,7 @@ var blah = Testing()
 
 description = "This is a test"
 
-val EnvType = parameter("EnvType", Str) {
+val EnvType by parameter(Str) {
     description = "Environment Type"
     default = "test"
     allowedValues = listOf("prod", "test")

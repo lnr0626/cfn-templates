@@ -1,6 +1,17 @@
+
 import nl.javadude.gradle.plugins.license.LicensePlugin
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.JavaExec
+import org.gradle.script.lang.kotlin.dependencies
+import org.gradle.script.lang.kotlin.extra
+import org.gradle.script.lang.kotlin.get
+import org.gradle.script.lang.kotlin.gradleScriptKotlin
+import org.gradle.script.lang.kotlin.invoke
+import org.gradle.script.lang.kotlin.kotlinModule
+import org.gradle.script.lang.kotlin.license
+import org.gradle.script.lang.kotlin.plugin
+import org.gradle.script.lang.kotlin.repositories
+import org.gradle.script.lang.kotlin.version
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import java.util.Calendar
 
@@ -57,6 +68,12 @@ subprojects {
 
     tasks {
         val ktlint by creating(JavaExec::class) {
+            main = "com.github.shyiko.ktlint.Main"
+            classpath = configurations["ktlint"]
+            args("src/**/*.kt")
+        }
+
+        val ktlintFormat by creating(JavaExec::class) {
             main = "com.github.shyiko.ktlint.Main"
             classpath = configurations["ktlint"]
             args("-F", "src/**/*.kt")

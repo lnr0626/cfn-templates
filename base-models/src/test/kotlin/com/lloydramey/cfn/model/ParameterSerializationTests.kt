@@ -24,21 +24,25 @@ class ParameterSerializationTests {
     @Test
     fun parameters() {
         val param = Parameter(
-                type = Types.Str,
-                id = "EnvType"
+            type = Types.Str,
+            id = "EnvType",
+            allowedValues = listOf("test", "prod"),
+            description = "Environment Type",
+            default = "test",
+            constraintDescription = "must specify prod or test."
         )
-        param.allowedValues = listOf("test", "prod")
-        param.description = "Environment Type"
-        param.default = "test"
-        param.constraintDescription = "must specify prod or test."
 
         assertThat(
-                TestHelper.mapper.writeValueAsString(param),
-                jsonEquals("{'Type': 'String', " +
-                        "'AllowedValues': ['test', 'prod'], " +
-                        "'Description': 'Environment Type', " +
-                        "'Default': 'test'," +
-                        " 'ConstraintDescription': 'must specify prod or test.'}")
-        )
+            TestHelper.mapper.writeValueAsString(param),
+            jsonEquals("""
+{
+    "Type": "String",
+    "AllowedValues": ["test", "prod"],
+    "Description": "Environment Type",
+    "Default": "test",
+    "ConstraintDescription": "must specify prod or test."
+}
+"""
+            ))
     }
 }

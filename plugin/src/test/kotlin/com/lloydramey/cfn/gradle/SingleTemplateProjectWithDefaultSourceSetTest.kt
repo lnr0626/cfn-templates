@@ -44,7 +44,7 @@ dependencies {
 import com.lloydramey.cfn.model.parameters.Types.*
 import com.lloydramey.cfn.model.functions.*
 
-val CloudWatchArn = parameter("CloudWatchArn", Str) {
+val CloudWatchArn by parameter(Str) {
     description = "ARN for cloudwatch"
     default = "test"
 }

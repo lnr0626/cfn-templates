@@ -16,65 +16,20 @@
 package com.lloydramey.cfn.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.lloydramey.cfn.model.functions.Referencable
-import com.lloydramey.cfn.model.parameters.Types
 
 @JsonIgnoreProperties("Id")
 class Parameter(
     id: String,
-    val type: ParameterType
-) : Referencable(id) {
-    var allowedValues: List<String> = listOf()
-    var constraintDescription: String = ""
-    var description: String = ""
-    @JsonSerialize(using = ToStringSerializer::class) var noEcho: Boolean? = null
-    var allowedPattern: String = ""
-        set(value) {
-            throwIfIsNumber("AllowedPattern")
-            field = value
-        }
-    var default: String = ""
-        set(value) {
-            if (isNumberParameter() && value.toLongOrNull() == null) {
-                throw IllegalArgumentException("Default must be a valid number for Number Parameters")
-            }
-            field = value
-        }
-    @JsonSerialize(using = ToStringSerializer::class) var maxLength: Number? = null
-        set(value) {
-            throwIfIsNumber("MaxLength")
-            field = value
-        }
-    @JsonSerialize(using = ToStringSerializer::class) var minLength: Number? = null
-        set(value) {
-            throwIfIsNumber("MinLength")
-            field = value
-        }
-    @JsonSerialize(using = ToStringSerializer::class) var maxValue: Number? = null
-        set(value) {
-            throwIfIsNotNumber("MaxValue")
-            field = value
-        }
-    @JsonSerialize(using = ToStringSerializer::class) var minValue: Number? = null
-        set(value) {
-            throwIfIsNotNumber("MinValue")
-            field = value
-        }
-
-    private fun isNumberParameter() = type == Types.Number || type == ParameterType.List(Types.Number)
-    private fun isNotNumberParameter() = !isNumberParameter()
-
-    private fun throwIfIsNotNumber(fieldName: String) {
-        if (isNotNumberParameter()) {
-            throw IllegalArgumentException("You cannot specify $fieldName for a Number Parameter")
-        }
-    }
-
-    private fun throwIfIsNumber(fieldName: String) {
-        if (isNumberParameter()) {
-            throw IllegalArgumentException("You cannot specify $fieldName for a Number Parameter")
-        }
-    }
-}
+    val type: ParameterType,
+    val noEcho: String? = null,
+    val allowedValues: List<String> = emptyList(),
+    val constraintDescription: String? = null,
+    val description: String? = null,
+    val default: String? = null,
+    val allowedPattern: String? = null,
+    var maxLength: String? = null,
+    val minLength: String? = null,
+    val maxValue: String? = null,
+    val minValue: String? = null
+) : Referencable(id)

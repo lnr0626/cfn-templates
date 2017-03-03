@@ -16,6 +16,9 @@
 package template
 
 import com.lloydramey.cfn.model.aws.ApiGateway
+import com.lloydramey.cfn.model.functions.Equals
+import com.lloydramey.cfn.model.functions.Ref
+import com.lloydramey.cfn.model.functions.Val
 import com.lloydramey.cfn.model.parameters.Types.*
 import tests.*
 
@@ -29,9 +32,11 @@ var blah = Testing()
 
 description = "This is a test"
 
-val EnvType = parameter("EnvType", Str) {
+val EnvType by parameter(Str) {
     description = "Environment Type"
     default = "test"
     allowedValues = listOf("prod", "test")
     constraintDescription = "must specify prod or test."
 }
+
+val CreateProdResources by condition { Equals(Ref(EnvType), Val("prod")) }
