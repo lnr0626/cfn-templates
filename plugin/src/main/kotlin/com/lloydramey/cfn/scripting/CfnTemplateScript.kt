@@ -61,6 +61,7 @@ abstract class CfnTemplateScript {
         vararg attributes: ResourceDefinitionAttribute,
         init: T.() -> Unit
     ): ResourceDelegate<T> {
+
         val clazz = T::class
         requireDefaultNoArgConstructor(clazz)
         val properties = clazz.primaryConstructor!!.call()
@@ -104,8 +105,7 @@ abstract class CfnTemplateScript {
         get() = getPropertiesOfAType<Parameter>().associateBy { it.id }
 
     private val metadata: Map<String, Any>
-        get() = getPropertiesOfAType<TemplateMetadata>()
-            .associate { it.name to it.value }
+        get() = getPropertiesOfAType<TemplateMetadata>().associate { it.name to it.value }
 
     private val mappings: Map<String, Mapping>
         get() = getPropertiesOfAType<Mapping>().associateBy { it.id }
