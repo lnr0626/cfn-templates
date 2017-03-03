@@ -4,8 +4,13 @@ writing templates by hand is an error prone and laborious task. It's also diffic
 and to figure out what the error actually is. This project is based of ideas I've seen in other places - 
 such as troposphere (which is a wonderful project, I just can't use it for various reasons).
 
-I chose kotlin for this project mostly because I enjoy writing code in it, and it's JVM based. It also 
-provides (in most cases) a concise syntax for specifying things.
+This is still changing fairly rapidly, but I'm starting to settle on a syntax. My next task is to finish the gradle
+plugin and write an IDEA plugin to enable better syntax highlighting and code completion. I do not currently plan on
+writing an eclipse plugin for this, mostly because I never use eclipse.
+
+Once I've finished the plugins, I will resume adding resource types. I plan on supporting all of the AWS resource types,
+and am considering adding support for the open stack resource types. I think it'd be cool to write something to automatically
+generate the subclasses based on the AWS documentation, but I also feel that would be too much work to be worthwhile.
 
 ## Supported Types
 
@@ -34,9 +39,11 @@ This list may be slighted outdated. You can get the most up to date list by runn
 - AWS::CertificateManager::Certificate
 
 
-## Some general thoughts
+## Syntax
 
-The following is an example taken from the AWS CFN documentation and some thoughts on how that could look:
+I plan on writing some tests to verify behavior which are pure conversions of the AWS examples. Those should serve as 
+nice syntax examples. However, for the time being, the following is an example taken from the documentation which 
+demonstrates most aspects of CFN templates.
 
 ```json
 {
@@ -106,15 +113,19 @@ The following is an example taken from the AWS CFN documentation and some though
 }
 ```
 
+This is an equivalent template using Cloudify:
+
 ```kotlin
-val EnvType = parameter("EnvType", Str) {
+val EnvType by parameter(Str) {
     description = "Environment Type"
     default = "test"
     allowedValues = listOf("prod", "test")
     constraintDescription = "must specify prod or test."
 }
-val CreateProdResource = condition("CreateProdResources", Equals(Ref(EnvType), Val("prod")))
-val RegionMap = mapping("RegionMap") {
+
+val CreateProdResource by condition { Equals(Ref(EnvType), Val("prod")) }
+
+val RegionMap by mapping {
     key("us-east-1", "AMI" to "ami-7f418316", "TestAZ" to "us-east-1a")
     key("us-west-1", "AMI" to "ami-951945d0", "TestAz" to "us-west-1a")
     key("us-west-2", "AMI" to "ami-16fd7026", "TestAz" to "us-west-2a")   
@@ -124,33 +135,24 @@ val RegionMap = mapping("RegionMap") {
     key("ap-southeast-2", "AMI" to "ami-b3990e89", "TestAz" to "ap-southeast-2a")
     key("ap-northeast-1", "AMI" to "ami-dcfa4edd", "TestAz" to "ap-northeast-1a")
 }
-val instance = resource<Instance>("EC2Instance") {
+val EC2Instance by resource<Instance> {
     imageId = FindInMap(RegionMap, AWS.Region, "AMI")
 }
-val volume = resource<Volume>("NewVolume", ConditionalOn(CreateProdResource)) {
+val NewVolume by resource<Volume>(ConditionalOn(CreateProdResource)) {
     size = Val(100)
     availabilityZone = instance["AvailabilityZone"]
 }
-resource<VolumeAttachment>("MountPoint", DependsOn(volume), ConditionalOn(CreateProdResource)) {
+val MountPoint by resource<VolumeAttachment>(DependsOn(volume), ConditionalOn(CreateProdResource)) {
     instanceId = Ref(instance)
     volumeId = Ref(volume)
     device = Val("/dev/sdh")
 }
 
-output("VolumeId", ConditionalOn(CreateProdResource)) {
+val VolumeId by output(ConditionalOn(CreateProdResource)) {
     value = Ref(volume)
 }
 
 ```
-
-I'm still playing around with syntax to see what I think looks nice and makes sense.
-My main reasons aren't just for conciseness - that's nice, but not worth it. I think that
-moving to a typed language for this has a number of benefits. The include: it's possible to
-use the compiler to aid in validating something like the latter compare to the former, it
-makes it possible to create libraries of cloudformation templates that can be easily shared,
-and when updated errors are caught much earlier, and a few others. I'm also generally of
-the opinion that code is easier to write, read, and debug that configuration files - that
-may be one of the main reasons I prefer tools such as gradle and gulp to maven and grunt.
 
 #TODO
 - Gradle plugin for compiling things
