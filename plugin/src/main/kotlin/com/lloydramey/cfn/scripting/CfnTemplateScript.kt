@@ -26,28 +26,28 @@ import com.lloydramey.cfn.model.resources.Resource
 import com.lloydramey.cfn.model.resources.ResourceProperties
 import com.lloydramey.cfn.model.resources.attributes.ConditionalOn
 import com.lloydramey.cfn.model.resources.attributes.ResourceDefinitionAttribute
+import com.lloydramey.cfn.scripting.helpers.MetadataDelegate
+import com.lloydramey.cfn.scripting.helpers.TemplateMetadata
+import com.lloydramey.cfn.scripting.helpers.TemplateMetadataImpl
 import org.jetbrains.kotlin.script.ScriptTemplateDefinition
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.starProjectedType
 
 @ScriptTemplateDefinition(
     scriptFilePattern = ".*\\.template\\.kts"
 )
 abstract class CfnTemplateScript {
     protected var description: String = ""
-    internal val metadata = mutableMapOf<String, Any>()
     internal val parameters = mutableListOf<Parameter>()
     internal val mappings = mutableListOf<Mapping>()
     internal val conditions = mutableListOf<Condition>()
     protected val resources = mutableListOf<Resource<ResourceProperties>>()
     internal val outputs = mutableListOf<Output>()
 
-    protected fun metadata(id: String, value: Any) {
-        if (id in metadata) {
-            throw IllegalArgumentException("Duplicate id found for Metadata: $id")
-        }
-        metadata[id] = value
-    }
+    protected fun metadata(value: Any) = MetadataDelegate(value)
 
     protected fun mapping(id: String, init: MappingDefinition.() -> Unit): Mapping {
         if (id in mappings.map { it.id }) {
@@ -118,6 +118,15 @@ abstract class CfnTemplateScript {
         resources = resources.associateBy { it.id },
         outputs = outputs.associateBy { it.id }
     )
+
+    private val metadata: Map<String, Any>
+        get() {
+            val script = this
+            return script::class.memberProperties
+                .filter { it.returnType.isSubtypeOf(TemplateMetadata::class.starProjectedType) }
+                .map { it.call(script) as TemplateMetadataImpl }
+                .associate { it.name to it.value }
+        }
 }
 
 class MappingDefinition(internal val id: String) {
