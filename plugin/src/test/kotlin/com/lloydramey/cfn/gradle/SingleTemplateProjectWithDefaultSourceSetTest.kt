@@ -43,10 +43,32 @@ dependencies {
                             withFile("Account.template.kts", """
 import com.lloydramey.cfn.model.parameters.Types.*
 import com.lloydramey.cfn.model.functions.*
+import com.lloydramey.cfn.model.resources.attributes.*
+import com.lloydramey.cfn.model.functions.Equals
+import com.lloydramey.cfn.model.functions.Ref
+import com.lloydramey.cfn.model.functions.Val
+
+val EnvType by parameter(Str) {
+    description = "The environment to deploy to"
+    default = "test"
+    allowedValues = listOf("test", "prod")
+}
+
+val CreateProdResources by condition { Equals(Ref(EnvType), Val("prod")) }
 
 val CloudWatchArn by parameter(Str) {
     description = "ARN for cloudwatch"
     default = "test"
+}
+
+val Output by output {
+    value = Ref(CloudWatchArn)
+    description = "The thing that does the thing"
+}
+
+val Output3 by output(ConditionalOn(CreateProdResources)) {
+    value = Ref(CloudWatchArn)
+    description = "The thing that does the thing"
 }
 
 """)

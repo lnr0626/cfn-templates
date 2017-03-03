@@ -3,7 +3,6 @@ import nl.javadude.gradle.plugins.license.LicensePlugin
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.JavaExec
 import org.gradle.script.lang.kotlin.dependencies
-import org.gradle.script.lang.kotlin.extra
 import org.gradle.script.lang.kotlin.get
 import org.gradle.script.lang.kotlin.gradleScriptKotlin
 import org.gradle.script.lang.kotlin.invoke
@@ -13,7 +12,6 @@ import org.gradle.script.lang.kotlin.plugin
 import org.gradle.script.lang.kotlin.repositories
 import org.gradle.script.lang.kotlin.version
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
-import java.util.Calendar
 
 buildscript {
     repositories {
@@ -46,13 +44,7 @@ subprojects {
         strictCheck = false
         skipExistingHeaders = true
 
-        var year: Int by extra
-        var name: String by extra
-        var email: String by extra
-
-        year = Calendar.getInstance().get(Calendar.YEAR)
-        name = "Lloyd Ramey"
-        email = "lnr0626@gmail.com"
+        //TODO: Configure to use current year
     }
 
     configurations.create("ktlint")

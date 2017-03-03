@@ -14,25 +14,32 @@
  * limitations under the License.
  */
 package template
-import com.lloydramey.cfn.model.aws.ApiGateway
 import com.lloydramey.cfn.model.parameters.Types.*
-import tests.*
-
-val test = "asdf"
-
-val another = ApiGateway.Account()
-
-val param = Str
-
-var blah = Testing()
-
-description = "This is a test"
+import com.lloydramey.cfn.model.functions.*
+import com.lloydramey.cfn.model.resources.attributes.*
+import com.lloydramey.cfn.model.functions.Equals
+import com.lloydramey.cfn.model.functions.Ref
+import com.lloydramey.cfn.model.functions.Val
 
 val EnvType by parameter(Str) {
-    description = "Environment Type"
+    description = "The environment to deploy to"
     default = "test"
-    allowedValues = listOf("prod", "test")
-    constraintDescription = "must specify prod or test."
+    allowedValues = listOf("test", "prod")
 }
 
-val test = Test_template()
+val CreateProdResources by condition { Equals(Ref(EnvType), Val("prod")) }
+
+val CloudWatchArn by parameter(Str) {
+    description = "ARN for cloudwatch"
+    default = "test"
+}
+
+val Output by output {
+    value = Ref(CloudWatchArn)
+    description = "The thing that does the thing"
+}
+
+val Output3 by output(ConditionalOn(CreateProdResources)) {
+    value = Ref(CloudWatchArn)
+    description = "The thing that does the thing"
+}

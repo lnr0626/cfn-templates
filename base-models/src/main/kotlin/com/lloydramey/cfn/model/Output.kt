@@ -28,12 +28,11 @@ data class Export(val name: AwsTemplateValue) {
 
 data class Output(
     @JsonIgnore val id: String,
-    @JsonIgnore val condition: ConditionalOn? = null
+    @JsonIgnore val condition: ConditionalOn? = null,
+    @Required val value: AwsTemplateValue? = null,
+    val desciprtion: String? = null,
+    val export: Export? = null
 ) {
-    @Required var value: AwsTemplateValue? = null
-    var description: String? = null
-    var export: Export? = null
-
     @JsonAnyGetter
     fun json() = if (condition != null) mapOf("Condition" to condition) else emptyMap()
 }

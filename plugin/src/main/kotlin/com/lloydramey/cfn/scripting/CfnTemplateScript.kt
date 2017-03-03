@@ -30,6 +30,8 @@ import com.lloydramey.cfn.scripting.helpers.ConditionDelegate
 import com.lloydramey.cfn.scripting.helpers.MappingDefinition
 import com.lloydramey.cfn.scripting.helpers.MappingDelegate
 import com.lloydramey.cfn.scripting.helpers.MetadataDelegate
+import com.lloydramey.cfn.scripting.helpers.OutputDefinition
+import com.lloydramey.cfn.scripting.helpers.OutputDelegate
 import com.lloydramey.cfn.scripting.helpers.ParameterDefinition
 import com.lloydramey.cfn.scripting.helpers.ParameterDelegate
 import com.lloydramey.cfn.scripting.helpers.ResourceDelegate
@@ -41,25 +43,30 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
+typealias MappingInitializer = MappingDefinition.() -> Unit
+typealias ParameterInitializer = ParameterDefinition.() -> Unit
+typealias LazyCondition = () -> ConditionFunction
+typealias PropertyInitializer<T> = T.() -> Unit
+typealias OutputInitializer = OutputDefinition.() -> Unit
+
 @Suppress("unused")
 @ScriptTemplateDefinition(
     scriptFilePattern = ".*\\.template\\.kts"
 )
 abstract class CfnTemplateScript {
     protected var description: String = ""
-    internal val outputs = mutableListOf<Output>()
 
     protected fun metadata(value: Any) = MetadataDelegate(value)
 
-    protected fun mapping(init: MappingDefinition.() -> Unit) = MappingDelegate(init)
+    protected fun mapping(init: MappingInitializer) = MappingDelegate(init)
 
-    protected fun parameter(type: ParameterType, init: ParameterDefinition.() -> Unit) = ParameterDelegate(type, init)
+    protected fun parameter(type: ParameterType, init: ParameterInitializer) = ParameterDelegate(type, init)
 
-    protected fun condition(func: () -> ConditionFunction) = ConditionDelegate(func)
+    protected fun condition(func: LazyCondition) = ConditionDelegate(func)
 
     protected inline fun <reified T : ResourceProperties> resource(
         vararg attributes: ResourceDefinitionAttribute,
-        init: T.() -> Unit
+        init: PropertyInitializer<T>
     ): ResourceDelegate<T> {
 
         val clazz = T::class
@@ -70,20 +77,7 @@ abstract class CfnTemplateScript {
         return ResourceDelegate(properties, attributes.asList())
     }
 
-    protected fun output(id: String, condition: ConditionalOn? = null, init: Output.() -> Unit): Output {
-        if (id in outputs.map { it.id }) {
-            throw IllegalArgumentException("Duplicate Output named $id")
-        }
-        val output = Output(id, condition)
-        output.init()
-
-        if (output.value == null) {
-            throw IllegalArgumentException("You must initialize the Value attribute for the Output named $id")
-        }
-
-        outputs.add(output)
-        return output
-    }
+    protected fun output(condition: ConditionalOn? = null, init: OutputInitializer) = OutputDelegate(condition, init)
 
     internal fun toTemplate() = Template(
         description = description,
@@ -92,8 +86,11 @@ abstract class CfnTemplateScript {
         mappings = mappings,
         conditions = conditions,
         resources = resources,
-        outputs = outputs.associateBy { it.id }
+        outputs = outputs
     )
+
+    private val outputs: Map<String, Output>
+        get() = getPropertiesOfAType<Output>().associateBy { it.id }
 
     private val resources: Map<String, Resource<ResourceProperties>>
         get() = getPropertiesOfAType<Resource<ResourceProperties>>().associateBy { it.id }
