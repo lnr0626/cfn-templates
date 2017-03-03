@@ -125,15 +125,17 @@ val EnvType by parameter(Str) {
 
 val CreateProdResource by condition { Equals(Ref(EnvType), Val("prod")) }
 
+class val RegionData(val AMI: String, val TestAZ: String)
+
 val RegionMap by mapping {
-    key("us-east-1", "AMI" to "ami-7f418316", "TestAZ" to "us-east-1a")
-    key("us-west-1", "AMI" to "ami-951945d0", "TestAz" to "us-west-1a")
-    key("us-west-2", "AMI" to "ami-16fd7026", "TestAz" to "us-west-2a")   
-    key("eu-west-1", "AMI" to "ami-24506250", "TestAz" to "eu-west-1a")      
-    key("sa-east-1", "AMI" to "ami-3e3be423", "TestAz" to "sa-east-1a")      
-    key("ap-southeast-1", "AMI" to "ami-74dda626", "TestAz" to "ap-southeast-1a")
-    key("ap-southeast-2", "AMI" to "ami-b3990e89", "TestAz" to "ap-southeast-2a")
-    key("ap-northeast-1", "AMI" to "ami-dcfa4edd", "TestAz" to "ap-northeast-1a")
+    key("us-east-1", RegionData(AMI = "ami-7f418316", TestAZ = "us-east-1a"))
+    key("us-west-1", RegionData(AMI = "ami-951945d0", TestAz = "us-west-1a"))
+    key("us-west-2", RegionData(AMI = "ami-16fd7026", TestAz = "us-west-2a"))
+    key("eu-west-1", RegionData(AMI = "ami-24506250", TestAz = "eu-west-1a"))
+    key("sa-east-1", RegionData(AMI = "ami-3e3be423", TestAz = "sa-east-1a"))
+    key("ap-southeast-1", RegionData(AMI = "ami-74dda626", TestAz = "ap-southeast-1a"))
+    key("ap-southeast-2", RegionData(AMI = "ami-b3990e89", TestAz = "ap-southeast-2a"))
+    key("ap-northeast-1", RegionData(AMI = "ami-dcfa4edd", TestAz = "ap-northeast-1a"))
 }
 val EC2Instance by resource<Instance> {
     imageId = FindInMap(RegionMap, AWS.Region, "AMI")
