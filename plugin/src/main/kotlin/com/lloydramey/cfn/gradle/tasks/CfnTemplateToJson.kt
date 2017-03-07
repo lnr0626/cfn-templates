@@ -1,6 +1,7 @@
 package com.lloydramey.cfn.gradle.tasks
 
 import com.lloydramey.cfn.gradle.internal.OpenForGradle
+import com.lloydramey.cfn.gradle.internal.convertToJson
 import com.lloydramey.cfn.scripting.CfnTemplateScript
 import org.gradle.api.tasks.compile.AbstractCompile
 import org.jetbrains.kotlin.gradle.plugin.ParentLastURLClassLoader
@@ -20,24 +21,14 @@ class CfnTemplateToJson : AbstractCompile() {
         val classloader = ParentLastURLClassLoader(files, CfnTemplateToJson::class.java.classLoader)
 
         val t = thread(start = true, isDaemon = false, name = "Cloudify Template to JSON", contextClassLoader = classloader) {
-            val reflections = Reflections("")
+            val reflections = Reflections("", classloader)
             val templates = reflections.getSubTypesOf(CfnTemplateScript::class.java)
 
             templates
-                .map { it.canonicalName to it.newInstance() }
-                .map { (name, script) -> name to script.toTemplate() }
-                .map { (name, template) -> name to template.toString() }
-                .forEach { (name, json) ->
-                    val file = File(destinationDir, canonicalNameToFileName(name))
-                    FileWriter(file).use { writer ->
-                        writer.write(json)
-                    }
-                }
+                .forEach { convertToJson(it, destinationDir) }
         }
 
         t.join()
     }
-
-    private fun canonicalNameToFileName(name: String) = name.replace(Regex("(_template)?$"), ".template")
 
 }
