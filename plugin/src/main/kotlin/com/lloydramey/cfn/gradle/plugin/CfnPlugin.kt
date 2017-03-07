@@ -22,6 +22,7 @@ import com.lloydramey.cfn.gradle.internal.apply
 import com.lloydramey.cfn.gradle.internal.getPlugin
 import com.lloydramey.cfn.gradle.internal.mapClasspath
 import com.lloydramey.cfn.gradle.tasks.CfnTemplateCompile
+import com.lloydramey.cfn.gradle.tasks.CfnTemplateToJson
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.file.FileResolver
@@ -29,8 +30,10 @@ import org.gradle.api.internal.tasks.DefaultSourceSet
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import java.io.File
 import javax.inject.Inject
 
+@Suppress("unused")
 @OpenForGradle
 class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Project> {
     override fun apply(p: Project) {
@@ -60,7 +63,16 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
             compile.destinationDir = sourceSet.output.classesDir
             compile.mapClasspath { sourceSet.compileClasspath }
 
-            p.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
+            val toJsonName = sourceSet.getCompileTaskName("cloudifyToJson")
+            val toJson = p.tasks.create(toJsonName, CfnTemplateToJson::class.java)
+
+            toJson.description = "Convert the compiled ${sourceSet.name} cloudify templates into json"
+            toJson.setSource(cfnSourceSet.allCloudify)
+            toJson.destinationDir = File(p.buildDir, "cloudify-templates")
+            toJson.mapClasspath { sourceSet.runtimeClasspath }
+            toJson.dependsOn(compile)
+
+            p.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName, toJson)
         }
     }
 }
