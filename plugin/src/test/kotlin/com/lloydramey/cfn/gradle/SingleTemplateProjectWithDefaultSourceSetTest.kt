@@ -86,12 +86,15 @@ val Output3 by output(ConditionalOn(CreateProdResources)) {
 
     @Test
     fun `compile cloudify executes successfully`() {
-        val result = evaluateProjectWithArguments("compileCloudify").build()
-        val task = result.task(":compileCloudify")
+        val result = evaluateProjectWithArguments("compileCloudifyToJson").build()
+        val compile = result.task(":compileCloudify")
 
         println(result.output)
 
-        assert(task.outcome == SUCCESS)
+        assert(compile.outcome == SUCCESS)
+        val toJson = result.task(":compileCloudifyToJson")
+
+        assert(toJson.outcome == SUCCESS)
     }
 
     private fun evaluateProjectWithArguments(vararg args: String) = GradleRunner.create()
