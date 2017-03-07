@@ -1,6 +1,16 @@
+
 import org.gradle.plugin.devel.GradlePluginDevelopmentExtension
-import org.jetbrains.kotlin.allopen.gradle.AllOpenGradleSubplugin
+import org.gradle.script.lang.kotlin.compile
+import org.gradle.script.lang.kotlin.configure
+import org.gradle.script.lang.kotlin.dependencies
+import org.gradle.script.lang.kotlin.gradleScriptKotlin
+import org.gradle.script.lang.kotlin.kotlinModule
+import org.gradle.script.lang.kotlin.plugin
+import org.gradle.script.lang.kotlin.project
+import org.gradle.script.lang.kotlin.repositories
+import org.gradle.script.lang.kotlin.testCompile
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
+import org.jetbrains.kotlin.allopen.gradle.AllOpenGradleSubplugin
 
 buildscript {
     repositories {
@@ -44,6 +54,7 @@ dependencies {
     compile(kotlinModule("gradle-plugin"))
     compile("io.github.microutils:kotlin-logging:1.4.3")
     compile("org.slf4j:slf4j-api:1.7.23")
+    compile("org.reflections:reflections:0.9.10")
 
     testCompile(project(":aws"))
     testCompile(gradleTestKit())
