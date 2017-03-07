@@ -38,11 +38,11 @@ class ParameterDelegate(type: ParameterType, init: ParameterDefinition.() -> Uni
         constraintDescription = param.constraintDescription,
         default = param.default,
         description = param.description,
-        noEcho = param.noEcho.toString(),
-        maxLength = param.maxLength.toString(),
-        maxValue = param.maxValue.toString(),
-        minLength = param.minLength.toString(),
-        minValue = param.minValue.toString()
+        noEcho = param.noEcho?.toString(),
+        maxLength = param.maxLength?.toString(),
+        maxValue = param.maxValue?.toString(),
+        minLength = param.minLength?.toString(),
+        minValue = param.minValue?.toString()
     )
 
 }
