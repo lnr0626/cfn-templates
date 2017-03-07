@@ -12,11 +12,11 @@ fun convertToJson(clazz: Class<out CfnTemplateScript>, destinationDir: File) {
     val json = template.toString()
 
     val file = File(destinationDir, filename)
-    file.mkdirs()
+    file.parentFile.mkdirs()
 
     FileWriter(file).use { writer ->
         writer.write(json)
     }
 }
 
-private fun canonicalNameToFileName(name: String) = name.replace(Regex("(_template)?$"), ".template")
+private fun canonicalNameToFileName(name: String) = name.replace(Regex("(_template)?$"), "") + ".template"

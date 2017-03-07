@@ -7,7 +7,6 @@ import org.gradle.api.tasks.compile.AbstractCompile
 import org.jetbrains.kotlin.gradle.plugin.ParentLastURLClassLoader
 import org.reflections.Reflections
 import java.io.File
-import java.io.FileWriter
 import java.net.URI
 import kotlin.concurrent.thread
 
