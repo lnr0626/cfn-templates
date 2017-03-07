@@ -41,7 +41,7 @@ dependencies {
                     "main" {
                         "cloudify" {
                             withFile("Account.template.kts", """
-import com.lloydramey.cfn.model.parameters.Types.*
+import com.lloydramey.cfn.model.parameters.Types.Str
 import com.lloydramey.cfn.model.functions.*
 import com.lloydramey.cfn.model.resources.attributes.*
 import com.lloydramey.cfn.model.functions.Equals

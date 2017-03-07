@@ -72,7 +72,7 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
             toJson.mapClasspath { sourceSet.runtimeClasspath }
             toJson.dependsOn(compile)
 
-            p.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName, toJson)
+            p.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
         }
     }
 }

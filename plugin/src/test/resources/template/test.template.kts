@@ -19,7 +19,7 @@ import com.lloydramey.cfn.model.aws.ApiGateway
 import com.lloydramey.cfn.model.functions.Equals
 import com.lloydramey.cfn.model.functions.Ref
 import com.lloydramey.cfn.model.functions.Val
-import com.lloydramey.cfn.model.parameters.Types.*
+import com.lloydramey.cfn.model.parameters.Types.Str
 import tests.*
 
 val test = "asdf"
