@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.script.ScriptContents
 import org.jetbrains.kotlin.script.ScriptDependenciesResolver
 import java.util.concurrent.Future
 
-
 internal
 typealias Environment = Map<String, Any?>
 
