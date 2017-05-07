@@ -43,6 +43,8 @@ subprojects {
         plugin("com.jfrog.bintray")
     }
 
+    rootProject.tasks["release"].dependsOn(tasks["bintrayUpload"])
+
     group = "com.lloydramey.cfn"
 
     license {
