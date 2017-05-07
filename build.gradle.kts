@@ -43,7 +43,8 @@ subprojects {
         plugin("com.jfrog.bintray")
     }
 
-    rootProject.tasks["release"].dependsOn(tasks["bintrayUpload"])
+    rootProject.tasks["release"].dependsOn(tasks["check"])
+    rootProject.tasks["postRelease"].dependsOn(tasks["bintrayUpload"])
 
     group = "com.lloydramey.cfn"
 
