@@ -76,3 +76,4 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
         }
     }
 }
+

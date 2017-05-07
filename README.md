@@ -125,7 +125,7 @@ val EnvType by parameter(Str) {
 
 val CreateProdResource by condition { Equals(Ref(EnvType), Val("prod")) }
 
-class val RegionData(val AMI: String, val TestAZ: String)
+class RegionData(val AMI: String, val TestAZ: String)
 
 val RegionMap by mapping {
     "us-east-1" { RegionData(AMI = "ami-7f418316", TestAZ = "us-east-1a") }

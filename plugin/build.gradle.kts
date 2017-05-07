@@ -1,8 +1,6 @@
 
 import org.gradle.api.Project
-import org.gradle.plugin.devel.GradlePluginDevelopmentExtension
 import org.gradle.script.lang.kotlin.compile
-import org.gradle.script.lang.kotlin.configure
 import org.gradle.script.lang.kotlin.dependencies
 import org.gradle.script.lang.kotlin.getByName
 import org.gradle.script.lang.kotlin.gradleScriptKotlin
@@ -11,8 +9,8 @@ import org.gradle.script.lang.kotlin.plugin
 import org.gradle.script.lang.kotlin.project
 import org.gradle.script.lang.kotlin.repositories
 import org.gradle.script.lang.kotlin.testCompile
-import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.allopen.gradle.AllOpenGradleSubplugin
+import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 buildscript {
     repositories {
@@ -36,7 +34,7 @@ apply {
     plugin<AllOpenGradleSubplugin>()
 }
 
-configure<GradlePluginDevelopmentExtension> {
+gradlePlugin {
     plugins {
         create("cfnPlugin") {
             id = "com.lloydramey.cfn"
@@ -45,8 +43,12 @@ configure<GradlePluginDevelopmentExtension> {
     }
 }
 
-configure<AllOpenExtension> {
+allOpen {
     annotation("com.lloydramey.cfn.gradle.internal.OpenForGradle")
+}
+
+kotlin {
+     experimental.coroutines = Coroutines.ENABLE
 }
 
 dependencies {
@@ -57,6 +59,7 @@ dependencies {
     compile("io.github.microutils:kotlin-logging:1.4.3")
     compile("org.slf4j:slf4j-api:1.7.23")
     compile("org.reflections:reflections:0.9.10")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15")
 
     testCompile(project(":aws"))
     testCompile(gradleTestKit())
@@ -69,3 +72,16 @@ dependencies {
  */
 fun Project.`gradlePlugin`(configure: org.gradle.plugin.devel.GradlePluginDevelopmentExtension.() -> Unit = {}) =
     extensions.getByName<org.gradle.plugin.devel.GradlePluginDevelopmentExtension>("gradlePlugin").apply { configure() }
+
+/**
+ * Retrieves or configures the [kotlin][org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension] project extension.
+ */
+fun Project.`kotlin`(configure: org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension.() -> Unit = {}) =
+    extensions.getByName<org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension>("kotlin").apply { configure() }
+
+/**
+ * Retrieves or configures the [allOpen][org.jetbrains.kotlin.allopen.gradle.AllOpenExtension] project extension.
+ */
+fun Project.`allOpen`(configure: org.jetbrains.kotlin.allopen.gradle.AllOpenExtension.() -> Unit = {}) =
+    extensions.getByName<org.jetbrains.kotlin.allopen.gradle.AllOpenExtension>("allOpen").apply { configure() }
+

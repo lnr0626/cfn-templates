@@ -5,7 +5,7 @@ import java.io.File
 import java.io.FileWriter
 
 fun convertToJson(clazz: Class<out CfnTemplateScript>, destinationDir: File) {
-    val filename = canonicalNameToFileName(clazz.canonicalName)
+    val filename = templateClassNameToTemplateName(clazz.simpleName)
 
     val script = clazz.newInstance()
     val template = script.toTemplate()
@@ -19,4 +19,4 @@ fun convertToJson(clazz: Class<out CfnTemplateScript>, destinationDir: File) {
     }
 }
 
-private fun canonicalNameToFileName(name: String) = name.replace(Regex("(_template)?$"), "") + ".template"
+private fun templateClassNameToTemplateName(name: String) = name.replace(Regex("(_template)?$"), "") + ".template"

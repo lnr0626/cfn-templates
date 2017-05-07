@@ -51,6 +51,7 @@ typealias OutputInitializer = OutputDefinition.() -> Unit
 
 @Suppress("unused")
 @ScriptTemplateDefinition(
+    resolver = CfnTemplateDependencyResolver::class,
     scriptFilePattern = ".*\\.template\\.kts"
 )
 abstract class CfnTemplateScript {
