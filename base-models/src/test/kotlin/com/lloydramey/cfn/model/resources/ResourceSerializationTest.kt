@@ -53,53 +53,53 @@ class ResourceSerializationTest {
     @Test
     fun creationPolicies() {
         assertThat(
-                TestHelper.mapper.writeValueAsString(CreationPolicy(AutoScalingCreationPolicy(2), ResourceSignal(33, 15.minutes()))),
-                jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': '2'}, 'ResourceSignal':{'Count': '33', 'Timeout': 'PT15M'}}")
+            TestHelper.mapper.writeValueAsString(CreationPolicy(AutoScalingCreationPolicy(2), ResourceSignal(33, 15.minutes()))),
+            jsonEquals("{'AutoScalingCreationPolicy': {'MinSuccessfulInstancesPercent': '2'}, 'ResourceSignal':{'Count': '33', 'Timeout': 'PT15M'}}")
         )
     }
 
     @Test
     fun metadata() {
         assertThat(
-                TestHelper.mapper.writeValueAsString(MetadataAttr(mapOf("test" to "34", "key" to "value"))),
-                jsonEquals("{'test': '34', 'key': 'value'}") // Metadata attributes maintain case?
+            TestHelper.mapper.writeValueAsString(MetadataAttr(mapOf("test" to "34", "key" to "value"))),
+            jsonEquals("{'test': '34', 'key': 'value'}") // Metadata attributes maintain case?
         )
     }
 
     @Test
     fun dependsOn() {
         assertThat(
-                TestHelper.mapper.writeValueAsString(DependsOn(res)),
-                jsonEquals("Id")
+            TestHelper.mapper.writeValueAsString(DependsOn(res)),
+            jsonEquals("Id")
         )
 
         assertThat(
-                TestHelper.mapper.writeValueAsString(DependsOn(res, res)),
-                jsonEquals("['Id', 'Id']")
+            TestHelper.mapper.writeValueAsString(DependsOn(res, res)),
+            jsonEquals("['Id', 'Id']")
         )
     }
 
     @Test
     fun updatePolicy() {
         assertThat(
-                TestHelper.mapper.writeValueAsString(UpdatePolicy(AutoScalingReplacingUpdate(true))),
-                jsonEquals("{'AutoScalingReplacingUpdate': {'WillReplace': 'true'}}")
+            TestHelper.mapper.writeValueAsString(UpdatePolicy(AutoScalingReplacingUpdate(true))),
+            jsonEquals("{'AutoScalingReplacingUpdate': {'WillReplace': 'true'}}")
         )
         assertThat(
-                TestHelper.mapper.writeValueAsString(UpdatePolicy(autoScalingRollingUpdate = AutoScalingRollingUpdate(1, 0))),
-                jsonEquals("{'AutoScalingRollingUpdate': {'MaxBatchSize': '1', 'MinInstancesInService': '0'}}")
+            TestHelper.mapper.writeValueAsString(UpdatePolicy(autoScalingRollingUpdate = AutoScalingRollingUpdate(1, 0))),
+            jsonEquals("{'AutoScalingRollingUpdate': {'MaxBatchSize': '1', 'MinInstancesInService': '0'}}")
         )
         assertThat(
-                TestHelper.mapper.writeValueAsString(UpdatePolicy(autoScalingScheduledAction = AutoScalingScheduledAction(true))),
-                jsonEquals("{'AutoScalingScheduledAction': {'IgnoreUnmodifiedGroupSizeProperties': 'true'}}")
+            TestHelper.mapper.writeValueAsString(UpdatePolicy(autoScalingScheduledAction = AutoScalingScheduledAction(true))),
+            jsonEquals("{'AutoScalingScheduledAction': {'IgnoreUnmodifiedGroupSizeProperties': 'true'}}")
         )
     }
 
     @Test
     fun resource() {
         assertThat(
-                TestHelper.mapper.writeValueAsString(res),
-                jsonEquals("{'Properties': {'Attribute': 'value'}, 'Type': 'Test', 'DeletionPolicy': 'Retain'}")
+            TestHelper.mapper.writeValueAsString(res),
+            jsonEquals("{'Properties': {'Attribute': 'value'}, 'Type': 'Test', 'DeletionPolicy': 'Retain'}")
         )
     }
 }

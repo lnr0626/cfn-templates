@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 package template
-import com.lloydramey.cfn.model.parameters.Types.Str
-import com.lloydramey.cfn.model.functions.*
-import com.lloydramey.cfn.model.resources.attributes.*
+
 import com.lloydramey.cfn.model.functions.Equals
 import com.lloydramey.cfn.model.functions.Ref
 import com.lloydramey.cfn.model.functions.Val
+import com.lloydramey.cfn.model.parameters.Types.Str
+import com.lloydramey.cfn.model.resources.attributes.ConditionalOn
 
 val EnvType by parameter(Str) {
     description = "The environment to deploy to"

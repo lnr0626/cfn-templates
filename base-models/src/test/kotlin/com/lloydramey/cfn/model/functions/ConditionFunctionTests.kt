@@ -28,13 +28,13 @@ class ConditionFunctionTests {
     @Test
     fun andJsonIsValid() {
         assertThat(TestHelper.mapper.writeValueAsString(And(ConditionReference(blah), ConditionReference(test))),
-                jsonEquals("{'Fn::And': [{'Condition':'Blah'},{'Condition':'Test'}]}"))
+            jsonEquals("{'Fn::And': [{'Condition':'Blah'},{'Condition':'Test'}]}"))
     }
 
     @Test
     fun conditionFormatting() {
         assertThat(TestHelper.mapper.writeValueAsString(And(Equals(Val("left"), Val("right")), !ConditionReference(blah), ConditionReference(another))),
-                jsonEquals("{'Fn::And': [{'Fn::Equals': ['left', 'right']}, {'Fn::Not': {'Condition': 'Blah'}}, {'Condition': 'Another'}]}"))
+            jsonEquals("{'Fn::And': [{'Fn::Equals': ['left', 'right']}, {'Fn::Not': {'Condition': 'Blah'}}, {'Condition': 'Another'}]}"))
     }
 
     @Test
@@ -50,7 +50,7 @@ class ConditionFunctionTests {
     @Test
     fun orJsonIsValid() {
         assertThat(TestHelper.mapper.writeValueAsString(Or(ConditionReference(test), ConditionReference(blah))),
-                jsonEquals("{'Fn::Or': [{'Condition':'Test'}, {'Condition':'Blah'}]}"))
+            jsonEquals("{'Fn::Or': [{'Condition':'Test'}, {'Condition':'Blah'}]}"))
     }
 
     @Test

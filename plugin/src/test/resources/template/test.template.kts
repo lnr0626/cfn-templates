@@ -20,7 +20,7 @@ import com.lloydramey.cfn.model.functions.Equals
 import com.lloydramey.cfn.model.functions.Ref
 import com.lloydramey.cfn.model.functions.Val
 import com.lloydramey.cfn.model.parameters.Types.Str
-import tests.*
+import tests.Testing
 
 val test = "asdf"
 

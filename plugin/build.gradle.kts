@@ -1,4 +1,3 @@
-
 import org.gradle.api.Project
 import org.gradle.script.lang.kotlin.compile
 import org.gradle.script.lang.kotlin.dependencies
@@ -48,7 +47,7 @@ allOpen {
 }
 
 kotlin {
-     experimental.coroutines = Coroutines.ENABLE
+    experimental.coroutines = Coroutines.ENABLE
 }
 
 dependencies {

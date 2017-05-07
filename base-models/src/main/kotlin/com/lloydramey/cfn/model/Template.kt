@@ -37,13 +37,13 @@ internal object Jackson {
 
 @JsonPropertyOrder("AWSTemplateFormatVersion", "Description", "Metadata", "Parameters", "Mappings", "Conditions", "Resources", "Outputs")
 data class Template(
-        var description: String = "",
-        val metadata: Map<String, Any> = mutableMapOf(),
-        val parameters: Map<String, Parameter> = mutableMapOf(),
-        val mappings: Map<String, Mapping> = mutableMapOf(),
-        val conditions: Map<String, ConditionFunction> = mutableMapOf(),
-        val resources: Map<String, Resource<ResourceProperties>> = mutableMapOf(),
-        val outputs: Map<String, Output> = mutableMapOf()
+    var description: String = "",
+    val metadata: Map<String, Any> = mutableMapOf(),
+    val parameters: Map<String, Parameter> = mutableMapOf(),
+    val mappings: Map<String, Mapping> = mutableMapOf(),
+    val conditions: Map<String, ConditionFunction> = mutableMapOf(),
+    val resources: Map<String, Resource<ResourceProperties>> = mutableMapOf(),
+    val outputs: Map<String, Output> = mutableMapOf()
 ) {
     @JsonProperty("AWSTemplateFormatVersion")
     val version = "2010-09-09"

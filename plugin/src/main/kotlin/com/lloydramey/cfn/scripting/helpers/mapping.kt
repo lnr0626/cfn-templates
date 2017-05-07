@@ -27,6 +27,7 @@ class MappingDelegate(val init: MappingDefinition.() -> Unit) : ReadOnlyProperty
         def.init()
         def
     }
+
     override fun getValue(thisRef: CfnTemplateScript, property: KProperty<*>): Mapping = mapping.toMapping(property.name)
 }
 

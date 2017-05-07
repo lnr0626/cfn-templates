@@ -24,7 +24,7 @@ interface ConditionFunction : AllowedInConditionFunction {
 }
 
 class And(conditions: List<AllowedInConditionFunction>) : Fn("Fn::And", conditions), ConditionFunction {
-    constructor(vararg conditions: AllowedInConditionFunction): this(conditions.asList())
+    constructor(vararg conditions: AllowedInConditionFunction) : this(conditions.asList())
 }
 
 class Equals(left: AllowedInConditionFunction, right: AllowedInConditionFunction) : Fn("Fn::Equals", listOf(left, right)), ConditionFunction {

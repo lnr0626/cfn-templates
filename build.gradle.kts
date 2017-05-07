@@ -1,4 +1,3 @@
-
 import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
@@ -7,7 +6,6 @@ import org.gradle.script.lang.kotlin.`maven-publish`
 import org.gradle.script.lang.kotlin.apply
 import org.gradle.script.lang.kotlin.create
 import org.gradle.script.lang.kotlin.dependencies
-import org.gradle.script.lang.kotlin.embeddedKotlinVersion
 import org.gradle.script.lang.kotlin.get
 import org.gradle.script.lang.kotlin.getByName
 import org.gradle.script.lang.kotlin.getPluginByName

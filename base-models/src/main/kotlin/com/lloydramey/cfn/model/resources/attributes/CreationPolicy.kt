@@ -18,7 +18,7 @@ package com.lloydramey.cfn.model.resources.attributes
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 
-@JsonSerialize(using=ToStringSerializer::class)
+@JsonSerialize(using = ToStringSerializer::class)
 data class ISO8601Duration(val hours: Int = 0, val minutes: Int = 0, val seconds: Int = 0) {
     operator fun plus(other: ISO8601Duration) = ISO8601Duration(this.hours + other.hours, this.minutes + other.minutes, this.seconds + other.seconds)
 
@@ -35,14 +35,14 @@ fun Int.minutes() = ISO8601Duration(minutes = this)
 fun Int.seconds() = ISO8601Duration(seconds = this)
 
 data class AutoScalingCreationPolicy(
-        @JsonSerialize(using=ToStringSerializer::class) val minSuccessfulInstancesPercent: Int?
+    @JsonSerialize(using = ToStringSerializer::class) val minSuccessfulInstancesPercent: Int?
 )
 
 data class ResourceSignal(
-        @JsonSerialize(using= ToStringSerializer::class) val count: Int?,
-        val timeout: ISO8601Duration?
+    @JsonSerialize(using = ToStringSerializer::class) val count: Int?,
+    val timeout: ISO8601Duration?
 )
 
 data class CreationPolicy(
-        val autoScalingCreationPolicy: AutoScalingCreationPolicy?,
-        val resourceSignal: ResourceSignal?) : ResourceDefinitionAttribute("CreationPolicy")
+    val autoScalingCreationPolicy: AutoScalingCreationPolicy?,
+    val resourceSignal: ResourceSignal?) : ResourceDefinitionAttribute("CreationPolicy")
