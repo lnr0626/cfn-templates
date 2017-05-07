@@ -1,8 +1,10 @@
 
+import org.gradle.api.Project
 import org.gradle.plugin.devel.GradlePluginDevelopmentExtension
 import org.gradle.script.lang.kotlin.compile
 import org.gradle.script.lang.kotlin.configure
 import org.gradle.script.lang.kotlin.dependencies
+import org.gradle.script.lang.kotlin.getByName
 import org.gradle.script.lang.kotlin.gradleScriptKotlin
 import org.gradle.script.lang.kotlin.kotlinModule
 import org.gradle.script.lang.kotlin.plugin
@@ -61,3 +63,9 @@ dependencies {
     testCompile("junit:junit:4.12")
     testCompile("org.hamcrest:hamcrest-library:1.3")
 }
+
+/**
+ * Retrieves or configures the [gradlePlugin][org.gradle.plugin.devel.GradlePluginDevelopmentExtension] project extension.
+ */
+fun Project.`gradlePlugin`(configure: org.gradle.plugin.devel.GradlePluginDevelopmentExtension.() -> Unit = {}) =
+    extensions.getByName<org.gradle.plugin.devel.GradlePluginDevelopmentExtension>("gradlePlugin").apply { configure() }
