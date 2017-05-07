@@ -96,7 +96,7 @@ subprojects {
 
     publishing {
         publications.create<MavenPublication>("MavenPublication") {
-            from(components["java"])
+            artifact(tasks["jar"])
         }
     }
 

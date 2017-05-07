@@ -1,0 +1,18 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://dl.bintray.com/lnr0626/repo"
+        }
+    }
+
+    dependencies {
+        classpath "com.lloydramey.cfn:plugin:0.1.0"
+    }
+}
+
+apply plugin: "com.lloydramey.cfn"
+
+repositories {
+    jcenter()
+}
