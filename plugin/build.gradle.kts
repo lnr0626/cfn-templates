@@ -58,7 +58,6 @@ dependencies {
     compile("io.github.microutils:kotlin-logging:1.4.3")
     compile("org.slf4j:slf4j-api:1.7.23")
     compile("org.reflections:reflections:0.9.10")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15")
 
     testCompile(project(":aws"))
     testCompile(gradleTestKit())

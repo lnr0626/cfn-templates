@@ -58,6 +58,7 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
             val compileTaskName = sourceSet.getCompileTaskName("cloudify")
             val compile = p.tasks.create(compileTaskName, CfnTemplateCompile::class.java)
 
+            compile.group = "Cloudify"
             compile.description = "Compile the ${sourceSet.name} Cloudify source."
             compile.setSource(cfnSourceSet.cloudify)
             compile.destinationDir = sourceSet.output.classesDir
@@ -66,6 +67,7 @@ class CfnPlugin @Inject constructor(val fileResolver: FileResolver) : Plugin<Pro
             val toJsonName = sourceSet.getCompileTaskName("cloudifyToJson")
             val toJson = p.tasks.create(toJsonName, CfnTemplateToJson::class.java)
 
+            toJson.group = "Cloudify"
             toJson.description = "Convert the compiled ${sourceSet.name} cloudify templates into json"
             toJson.setSource(cfnSourceSet.allCloudify)
             toJson.destinationDir = File(p.buildDir, "cloudify-templates")
