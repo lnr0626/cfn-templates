@@ -50,5 +50,17 @@ class MappingDefinition {
         mappings[key] = values.toMap()
     }
 
+    fun String.invoke(vararg values: Pair<String, String>) {
+        key(this, values.toMap())
+    }
+
+    fun String.invoke(values: Map<String, String>) {
+        key(this, values)
+    }
+
+    fun String.invoke(values: Any) {
+        key(this, values)
+    }
+
     internal fun toMapping(id: String) = Mapping(id, mappings)
 }
