@@ -35,7 +35,6 @@ class CfnTemplateToJson : AbstractCompile() {
     private fun list(path: Path) =
         Files.list(path).map { it.toAbsolutePath() }.toList()
 
-
     @TaskAction
     override fun compile() {
         val files = (classpath.files)
