@@ -15,13 +15,17 @@
  */
 package com.lloydramey.cfn.model
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.ser.std.StdSerializer
 
 data class Mapping(
-    @JsonIgnore val id: String,
-    @JsonIgnore val mapping: Map<String, Map<String, String>>
-) {
-    @JsonAnyGetter
-    fun json() = mapping
+    val id: String,
+    val mapping: Map<String, Map<String, String>>
+)
+
+class MappingSerializer : StdSerializer<Mapping>(Mapping::class.java) {
+    override fun serialize(value: Mapping?, gen: JsonGenerator?, provider: SerializerProvider?) {
+        gen?.writeObject(value?.mapping)
+    }
 }
