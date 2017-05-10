@@ -157,5 +157,5 @@ val VolumeId by output(ConditionalOn(CreateProdResource)) {
 ```
 
 #TODO
-- Gradle plugin for compiling things
+- AWS models for cloud formation resources
 - IDEA plugin for syntax highlighting nicities
