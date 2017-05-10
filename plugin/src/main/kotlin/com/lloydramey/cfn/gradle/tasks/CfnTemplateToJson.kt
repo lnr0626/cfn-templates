@@ -18,25 +18,48 @@ package com.lloydramey.cfn.gradle.tasks
 import com.lloydramey.cfn.gradle.internal.OpenForGradle
 import com.lloydramey.cfn.gradle.internal.convertToJson
 import com.lloydramey.cfn.scripting.CfnTemplateScript
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
-import org.jetbrains.kotlin.gradle.plugin.ParentLastURLClassLoader
-import org.reflections.Reflections
 import java.io.File
 import java.net.URI
+import java.net.URLClassLoader
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.concurrent.thread
+import kotlin.streams.toList
 
 @OpenForGradle
 class CfnTemplateToJson : AbstractCompile() {
+
+    private fun list(path: Path) =
+        Files.list(path).map { it.toAbsolutePath() }.toList()
+
+
+    @TaskAction
     override fun compile() {
-        val files = (getSource().files + classpath.files)
+        val files = (classpath.files)
             .map(File::toURI)
             .map(URI::toURL)
 
-        val classloader = ParentLastURLClassLoader(files, CfnTemplateToJson::class.java.classLoader)
+        val templateClassNames = files
+            .map { Paths.get(it.toURI()).toAbsolutePath() }
+            .filter { Files.isDirectory(it) }
+            .flatMap { classpathFolder ->
+                list(classpathFolder)
+                    .map { it.toString() }
+                    .filter { it.endsWith("_template.class") }
+                    .map { it.removePrefix("$classpathFolder/").removeSuffix(".class") }
+            }
 
+        val classloader = URLClassLoader(files.toTypedArray(), CfnTemplateToJson::class.java.classLoader)
+
+        @Suppress("UNCHECKED_CAST")
         val t = thread(start = true, isDaemon = false, name = "Cloudify Template to JSON", contextClassLoader = classloader) {
-            val reflections = Reflections("", classloader)
-            val templates = reflections.getSubTypesOf(CfnTemplateScript::class.java)
+            val templates = templateClassNames
+                .map { Class.forName(it, true, classloader) }
+                .filter { CfnTemplateScript::class.java.isAssignableFrom(it) }
+                .map { it as Class<CfnTemplateScript> }
 
             templates
                 .forEach { convertToJson(it, destinationDir) }

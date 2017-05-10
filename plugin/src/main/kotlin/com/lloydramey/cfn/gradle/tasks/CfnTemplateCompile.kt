@@ -38,6 +38,7 @@ class CfnTemplateCompile : AbstractCompile() {
     fun runCompiler() {
         destinationDir.deleteRecursively()
 
+
         val files = getSource().files
 
         val success = compileScriptToDirectory(

@@ -95,6 +95,7 @@ private fun compileTo(
                 scriptDefs.forEach { addScriptDefinition(it) }
                 classPath.forEach { addJvmClasspathRoot(it) }
                 addJvmClasspathRoot(kotlinStdlibJar)
+                addJvmClasspathRoot(scriptJar)
             }
             val environment = kotlinCoreEnvironmentFor(configuration, disposable)
             return compileBunchOfSources(environment)
@@ -105,6 +106,10 @@ private fun compileTo(
 private
 val kotlinStdlibJar: File
     get() = PathUtil.getResourcePathForClass(Unit::class.java)
+
+private
+val scriptJar: File
+    get() = PathUtil.getResourcePathForClass(CfnTemplateScript::class.java)
 
 private
 inline fun <T> withRootDisposable(action: (Disposable) -> T): T {

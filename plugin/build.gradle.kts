@@ -57,7 +57,6 @@ dependencies {
     compile(kotlinModule("gradle-plugin"))
     compile("io.github.microutils:kotlin-logging:1.4.3")
     compile("org.slf4j:slf4j-api:1.7.23")
-    compile("org.reflections:reflections:0.9.10")
 
     testCompile(project(":aws"))
     testCompile(gradleTestKit())
