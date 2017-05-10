@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
         maven {
             url "https://dl.bintray.com/lnr0626/repo"
@@ -7,13 +8,14 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.lloydramey.cfn:plugin:0.2.0-dev.2+726f540"
+        classpath "com.lloydramey.cfn:plugin:0.2.0"
     }
 }
 
 apply plugin: "com.lloydramey.cfn"
 
 repositories {
+    mavenLocal()
     jcenter()
     maven {
         url "https://dl.bintray.com/lnr0626/repo"
@@ -21,6 +23,6 @@ repositories {
 }
 
 dependencies {
-    compile "com.lloydramey.cfn:aws:0.2.0-dev.2+726f540"
-    compile "com.lloydramey.cfn:base-models:0.2.0-dev.2+726f540"
+    compile "com.lloydramey.cfn:aws:0.2.0"
+    compile "com.lloydramey.cfn:base-models:0.2.0"
 }
